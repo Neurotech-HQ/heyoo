@@ -27,14 +27,20 @@ def hook():
         new_message = messenger.get_mobile(data)
         if new_message:
             mobile = messenger.get_mobile(data)
-            message = messenger.get_message(data)
-            name = messenger.get_name(data)
-            print(f"{name} with this {mobile} number sent  {message}")
-            # messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
-            response = messenger.send_image(
-                image_url="https://i.imgur.com/Fh7XVYY.jpeg", recipient_id=mobile
-            )
-            print(response)
+            message_type = messenger.get_message_type(data)
+
+            if message_type == "text":
+                message = messenger.get_message(data)
+                name = messenger.get_name(data)
+                print(f"{name} with this {mobile} number sent  {message}")
+                messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
+
+            elif message_type == "interactive":
+                message_response = messenger.get_interactive_response(data)
+                print(message_response)
+
+            else:
+                pass
         else:
             delivery = messenger.get_delivery(data)
             if delivery:

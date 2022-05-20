@@ -2,51 +2,7 @@
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
 
-import json
 import requests
-
-# curl -X  POST \
-#  'https://graph.facebook.com/v13.0/FROM_PHONE_NUMBER_ID/messages' \
-#  -H 'Authorization: Bearer ACCESS_TOKEN' \
-#  -d '{
-#   "messaging_product": "whatsapp",
-#   "recipient_type": "individual",
-#   "to": "PHONE_NUMBER",
-#   "type": "interactive",
-#   "interactive": {
-#     "type": "list",
-#     "header": {
-#       "type": "text",
-#       "text": "HEADER_TEXT"
-#     },
-#     "body": {
-#       "text": "BODY_TEXT"
-#     },
-#     "footer": {
-#       "text": "FOOTER_TEXT"
-#     },
-#     "action": {
-#       "button": "BUTTON_TEXT",
-#       "sections": [
-#         {
-#           "title": "SECTION_2_TITLE",
-#           "rows": [
-#             {
-#               "id": "SECTION_2_ROW_1_ID",
-#               "title": "SECTION_2_ROW_1_TITLE",
-#               "description": "SECTION_2_ROW_1_DESCRIPTION"
-#             },
-#             {
-#               "id": "SECTION_2_ROW_2_ID",
-#               "title": "SECTION_2_ROW_2_TITLE",
-#               "description": "SECTION_2_ROW_2_DESCRIPTION"
-#             }
-#           ]
-#         }
-#       ]
-#     }
-#   }
-# }'
 
 
 class WhatsApp(object):
@@ -223,6 +179,11 @@ class WhatsApp(object):
         data = self.preprocess(data)
         if "messages" in data:
             return data["messages"][0]["timestamp"]
+
+    def get_interactive_response(self, data):
+        data = self.preprocess(data)
+        if "messages" in data:
+            return data["messages"][0]["interactive"]["list_reply"]
 
     def get_message_type(self, data):
         data = self.preprocess(data)
