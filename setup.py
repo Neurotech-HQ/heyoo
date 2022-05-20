@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Neurotech-HQ/heyoo",
-    download_url="https://github.com/Neurotech-HQ/heyoo/archive/refs/tags/alpha.tar.gz",
+    download_url="https://github.com/Neurotech-HQ/heyoo/archive/refs/tags/alphav0.1.tar.gz",
     author="Jordan Kalebu",
     author_email="isaackeinstein@gmail.com",
     license="MIT",
