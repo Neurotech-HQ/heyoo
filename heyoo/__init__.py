@@ -2,47 +2,51 @@
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
 
+import json
 import requests
 
-# {
-#     "object": "whatsapp_business_account",
-#     "entry": [
+# curl -X  POST \
+#  'https://graph.facebook.com/v13.0/FROM_PHONE_NUMBER_ID/messages' \
+#  -H 'Authorization: Bearer ACCESS_TOKEN' \
+#  -d '{
+#   "messaging_product": "whatsapp",
+#   "recipient_type": "individual",
+#   "to": "PHONE_NUMBER",
+#   "type": "interactive",
+#   "interactive": {
+#     "type": "list",
+#     "header": {
+#       "type": "text",
+#       "text": "HEADER_TEXT"
+#     },
+#     "body": {
+#       "text": "BODY_TEXT"
+#     },
+#     "footer": {
+#       "text": "FOOTER_TEXT"
+#     },
+#     "action": {
+#       "button": "BUTTON_TEXT",
+#       "sections": [
 #         {
-#             "id": "115653644479878",
-#             "changes": [
-#                 {
-#                     "value": {
-#                         "messaging_product": "whatsapp",
-#                         "metadata": {
-#                             "display_phone_number": "15550650797",
-#                             "phone_number_id": "104469288944395"
-#                         },
-#                         "contacts": [
-#                             {
-#                                 "profile": {
-#                                     "name": "Jordan Kalebu"
-#                                 },
-#                                 "wa_id": "255757294146"
-#                             }
-#                         ],
-#                         "messages": [
-#                             {
-#                                 "from": "255757294146",
-#                                 "id": "wamid.HBgMMjU1NzU3Mjk0MTQ2FQIAEhggMEFCRkVCRDlEQzdDQzAwQjNDOTI0QUY5OTk0RTkxNTMA",
-#                                 "timestamp": "1653048643",
-#                                 "text": {
-#                                     "body": "Hi"
-#                                 },
-#                                 "type": "text"
-#                             }
-#                         ]
-#                     },
-#                     "field": "messages"
-#                 }
-#             ]
+#           "title": "SECTION_2_TITLE",
+#           "rows": [
+#             {
+#               "id": "SECTION_2_ROW_1_ID",
+#               "title": "SECTION_2_ROW_1_TITLE",
+#               "description": "SECTION_2_ROW_1_DESCRIPTION"
+#             },
+#             {
+#               "id": "SECTION_2_ROW_2_ID",
+#               "title": "SECTION_2_ROW_2_TITLE",
+#               "description": "SECTION_2_ROW_2_DESCRIPTION"
+#             }
+#           ]
 #         }
-#     ]
-# }
+#       ]
+#     }
+#   }
+# }'
 
 
 class WhatsApp(object):
@@ -54,12 +58,15 @@ class WhatsApp(object):
             "Authorization": "Bearer {}".format(self.token),
         }
 
-    def send_message(self, message, recipient_id):
+    def send_message(
+        self, message, recipient_id, recipient_type="individual", preview_url=True
+    ):
         data = {
             "messaging_product": "whatsapp",
+            "recipient_type": recipient_type,
             "to": recipient_id,
             "type": "text",
-            "text": {"body": message},
+            "text": {"preview_url": preview_url, "body": message},
         }
         r = requests.post(f"{self.url}", headers=self.headers, json=data)
         return r.json()
@@ -74,62 +81,117 @@ class WhatsApp(object):
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_image(self, image_url, recipient_id):
+    def send_location(self, lat, long, name, address, recipient_id):
         data = {
             "messaging_product": "whatsapp",
             "to": recipient_id,
-            "type": "image",
-            "image": {"url": image_url},
+            "type": "location",
+            "location": {
+                "latitude": lat,
+                "longitude": long,
+                "name": name,
+                "address": address,
+            },
         }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_audio(self, audio_url, recipient_id):
-        data = {
-            "messaging_product": "whatsapp",
-            "to": recipient_id,
-            "type": "audio",
-            "audio": {"url": audio_url},
-        }
+    def send_image(
+        self,
+        image,
+        recipient_id,
+        recipient_type="individual",
+        caption=None,
+        link=True,
+    ):
+        if link:
+            data = {
+                "messaging_product": "whatsapp",
+                "recipient_type": recipient_type,
+                "to": recipient_id,
+                "type": "image",
+                "image": {"link": image, "caption": caption},
+            }
+        else:
+            data = {
+                "messaging_product": "whatsapp",
+                "recipient_type": recipient_type,
+                "to": recipient_id,
+                "type": "image",
+                "image": {"id": image, "caption": caption},
+            }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_video(self, video_url, recipient_id):
-        data = {
-            "messaging_product": "whatsapp",
-            "to": recipient_id,
-            "type": "video",
-            "video": {"url": video_url},
-        }
+    def send_audio(self, audio, recipient_id, link=True):
+        if link:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "audio",
+                "audio": {"link": audio},
+            }
+        else:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "audio",
+                "audio": {"id": audio},
+            }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_file(self, file_url, recipient_id):
-        data = {
-            "messaging_product": "whatsapp",
-            "to": recipient_id,
-            "type": "file",
-            "file": {"url": file_url},
-        }
+    def send_video(self, video, recipient_id, caption=None, link=True):
+        if link:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "video",
+                "video": {"link": video, "caption": caption},
+            }
+        else:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "video",
+                "video": {"id": video, "caption": caption},
+            }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_button(self, text, buttons, recipient_id):
-        data = {
-            "messaging_product": "whatsapp",
-            "to": recipient_id,
-            "type": "template",
-            "template": {"text": text, "buttons": buttons},
-        }
+    def send_document(self, document, recipient_id, caption=None, link=True):
+        if link:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "document",
+                "document": {"link": document, "caption": caption},
+            }
+        else:
+            data = {
+                "messaging_product": "whatsapp",
+                "to": recipient_id,
+                "type": "document",
+                "document": {"id": document, "caption": caption},
+            }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
-    def send_generic(self, elements, recipient_id):
+    def create_button(self, button):
+        return {
+            "type": "list",
+            "header": {"type": "text", "text": button.get("header")},
+            "body": {"text": button.get("body")},
+            "footer": {"text": button.get("footer")},
+            "action": button.get("action"),
+        }
+
+    def send_button(self, button, recipient_id):
         data = {
             "messaging_product": "whatsapp",
             "to": recipient_id,
-            "type": "template",
-            "template": {"elements": elements},
+            "type": "interactive",
+            "interactive": self.create_button(button),
         }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
