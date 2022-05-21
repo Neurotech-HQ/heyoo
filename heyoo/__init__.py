@@ -27,12 +27,12 @@ class WhatsApp(object):
         r = requests.post(f"{self.url}", headers=self.headers, json=data)
         return r.json()
 
-    def send_template(self, template, recipient_id):
+    def send_template(self, template, recipient_id, lang="en_US"):
         data = {
             "messaging_product": "whatsapp",
             "to": recipient_id,
             "type": "template",
-            "template": template,
+            "template": {"name": template, "language": {"code": lang}},
         }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
