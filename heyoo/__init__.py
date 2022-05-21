@@ -6,9 +6,9 @@ import requests
 
 
 class WhatsApp(object):
-    def __init__(self, token=None):
+    def __init__(self, token=None, phone_number_id=None):
         self.token = token
-        self.url = "https://graph.facebook.com/v13.0/104469288944395/messages"
+        self.url = f"https://graph.facebook.com/v13.0/{phone_number_id}/messages"
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(self.token),
