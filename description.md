@@ -51,19 +51,20 @@ Here are steps to follow for you to get started:-
 3. Select Business >> Business
 4. It will prompt you to enter basic app informations
 5. It will ask you to add products to your app
-    a. Add WhatsApp Messenger
-6. Right there you will see your **TOKEN** and **TEST WHATSAPP NUMBER**
+   a. Add WhatsApp Messenger
+6. Right there you will see a your **TOKEN**,  **TEST WHATSAPP NUMBER** and its phone_number_id
 7. Lastly verify the number you will be using for testing on the **To** field.
 
 Once you have followed the above procedures, now you're ready to start hacking with the Wrapper.
 
 ## Authentication
 
-Here is how you authenticate your application.
+Here how you authenticate your application, you need to specofy two things the ```TOKEN``` and ```phone_number_id``` of your test number
+
 
 ```python
 >>> from heyoo import WhatsApp
->>> messenger = WhatsApp('TOKEN')
+>>> messenger = WhatsApp('TOKEN',  phone_number_id='104xxxxxx')
 ```
 
 Once you have authenticated your app, now you can start using the above mentioned features as shown below;
