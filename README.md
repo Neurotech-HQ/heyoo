@@ -1,6 +1,11 @@
 <samp>
-    
+
 # [heyoo](https://pypi.org/project/heyoo/)
+
+[![Made in Tanzania](https://img.shields.io/badge/made%20in-tanzania-008751.svg?style=flat-square)](https://github.com/Tanzania-Developers-Community/made-in-tanzania)
+[![Downloads](https://pepy.tech/badge/heyoo)](https://pepy.tech/project/heyoo)
+[![Downloads](https://pepy.tech/badge/heyoo/month)](https://pepy.tech/project/heyoo)
+[![Downloads](https://pepy.tech/badge/heyoo/week)](https://pepy.tech/project/heyoo)
 
 Unofficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api)
 
