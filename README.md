@@ -202,10 +202,16 @@ If you will face any issue with the usage of this package please raise one so as
 ## Contributing
 
 This is an opensource project under ```MIT License``` so any one is welcome to contribute from typo, to source code to documentation, ```JUST FORK IT```.
+    
+## References 
+1. [WhatsApp Cloud API official documentation](https://developers.facebook.com/docs/whatsapp/cloud-api/)
+
+## Related 
+1. [WhatsApp Cloud API PHP](https://github.com/pro-cms/whatsappcloud-php)
+</samp>
+
 
 ## All the credit
 
 1. [kalebu](https://github.com/Kalebu)
 2. All other contributors
-
-</samp>
