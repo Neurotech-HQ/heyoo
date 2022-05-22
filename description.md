@@ -1,10 +1,10 @@
 # heyoo
 
-UnOfficial python wrapper to WhatsApp Cloud API
+UnOfficial python wrapper for WhatsApp Cloud API
 
 <samp>
 
-UnOfficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api)
+UnOfficial Python Wrapper for [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api)
 
 ## Features supported
 
@@ -42,9 +42,9 @@ pip3 install --upgrade heyoo
 
 ## Setting up
 
-To get started using this package, you will need **TOKEN** and **TEST WHATSAPP NUMBER** which you can get from [Facebook Developer Portal](https://developers.facebook.com/)
+To get started using this package, you will need a **TOKEN** and **TEST WHATSAPP NUMBER** which you can get from [Facebook Developer Portal](https://developers.facebook.com/)
 
-Here are steps to follow for you to get started:-
+Here are the steps to follow for you to get started:-
 
 1. [Go to your apps](https://developers.facebook.com/apps)
 2. [create an app](https://developers.facebook.com/apps/create/)
@@ -53,13 +53,13 @@ Here are steps to follow for you to get started:-
 5. It will ask you to add products to your app
    a. Add WhatsApp Messenger
 6. Right there you will see a your **TOKEN**,  **TEST WHATSAPP NUMBER** and its phone_number_id
-7. Lastly verify the number you will be using for testing on the **To** field.
+7. Lastly verify the number you will be using for testing on the **To** field, Verification code will be sent to this phone number via WhatsApp.
 
 Once you have followed the above procedures, now you're ready to start hacking with the Wrapper.
 
 ## Authentication
 
-Here how you authenticate your application, you need to specofy two things the ```TOKEN``` and ```phone_number_id``` of your test number
+Here is how to authenticate your application, you need to specify two things the ```TOKEN``` and ```phone_number_id``` of your test number
 
 
 ```python
@@ -67,7 +67,7 @@ Here how you authenticate your application, you need to specofy two things the `
 >>> messenger = WhatsApp('TOKEN',  phone_number_id='104xxxxxx')
 ```
 
-Once you have authenticated your app, now you can start using the above mentioned features as shown below;
+Once you have authenticated your app, now you can start using the above mentioned features as shown below:-
 
 ## Sending Messages
 
@@ -189,13 +189,13 @@ Here is how to send a pre-approved template message;
 
 ## Webhook
 
-Webhook are useful incase you're wondering how to respond to an incoming message sent by user, but I have created a [starter webhook](https://github.com/Neurotech-HQ/heyoo/blob/main/hook.py) which you can then customize it according to your own plans.
+Webhook are useful incase you're wondering how to respond to an incoming message sent by user, but I have created a [starter webhook](https://github.com/Neurotech-HQ/heyoo/blob/main/hook.py) which you can then customize it according to your own needs.
 
 To learn more about webhook and how to configure in your Facebook developer dashboard please [have a look here](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks).
 
 ## Issues
 
-If you will face any issue with the usage of this package please raise one so as we can quickly fix it as soon as possible;
+If face any issues with the usage of this package please raise one so as we can quickly fix it as soon as possible.
 
 ## Contributing
 
