@@ -51,7 +51,7 @@ Here are steps to follow for you to get started
 
 1. [Go to your apps](https://developers.facebook.com/apps)
 2. [create an app](https://developers.facebook.com/apps/create/)
-3. Select Bussiness >> Bussiness
+3. Select Business >> Business
 4. It will prompt you to enter basic app informations
 5. It will ask you to add products to your app
     a. Add WhatsApp Messenger
