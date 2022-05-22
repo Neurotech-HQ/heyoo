@@ -20,7 +20,8 @@ setup(
     license="MIT",
     packages=["heyoo"],
     install_requires=[
-        "requests"
+        "requests",
+        "flask"
     ],
     keywords=[
         "heyoo",
