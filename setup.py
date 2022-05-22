@@ -19,6 +19,9 @@ setup(
     author_email="isaackeinstein@gmail.com",
     license="MIT",
     packages=["heyoo"],
+    install_requires=[
+        "requests"
+    ],
     keywords=[
         "heyoo",
         "heyoo-libary",
