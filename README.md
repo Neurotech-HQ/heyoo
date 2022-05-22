@@ -205,6 +205,7 @@ This is an opensource project under ```MIT License``` so any one is welcome to c
     
 ## References 
 1. [WhatsApp Cloud API official documentation](https://developers.facebook.com/docs/whatsapp/cloud-api/)
+2. [Programming WhatsApp is now even easier for Python Developers](https://mr-collins-llb.medium.com/programming-whatsapp-is-now-even-easier-for-python-developers-e1a4343deed6)
 
 ## Related 
 1. [WhatsApp Cloud API PHP](https://github.com/pro-cms/whatsappcloud-php)
