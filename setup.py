@@ -21,7 +21,7 @@ setup(
     packages=["heyoo"],
     install_requires=[
         "requests",
-        "flask"
+        "flask",
     ],
     keywords=[
         "heyoo",
