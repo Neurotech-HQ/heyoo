@@ -151,6 +151,17 @@ class WhatsApp(object):
         }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
+    
+    def send_reply_button(self, button, recipient_id):
+        data = {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient_id,
+            "type": "interactive",
+            "interactive": button,
+        }
+        r = requests.post(self.url, headers=self.headers, json=data)
+        return r.json()
 
     def preprocess(self, data):
         return data["entry"][0]["changes"][0]["value"]
