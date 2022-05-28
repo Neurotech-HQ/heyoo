@@ -193,6 +193,15 @@ Here how to send a pre-approved template message;
 
 Webhook are useful incase you're wondering how to respond to incoming message send by user, but I have created a [starter webhook](https://github.com/Neurotech-HQ/heyoo/blob/main/hook.py) which you can then customize it according to your own plans.
 
+Incase you want a hustle free automatic deployment of the webhook to the Heroku platform, then we have made it simpler for you. With Just a click of a button you can deploy your webhook to Heroku.
+
+## steps
+1. Click the deploy button and the Heroku webpage will open for authentication, after authentication sit back and relax for deployment to finish.
+                             [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/JAXPARROW/whatsapi-flask-webhook)
+
+2. From Heroku settings configure your Environment varibles of your WhatsAapp application.
+3. Setup and verify your webhook url and token then subscribe to messages.
+
 To learn more about webhook and how to configure in your Facebook developer dashboard please [have a look here](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks).
 
 ## Issues
