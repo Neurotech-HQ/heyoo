@@ -181,6 +181,40 @@ Here an example;
     )
 ```
 
+## Sending Interactive reply buttons
+
+Here an example;
+
+```python
+>>> messenger.send_reply_button(
+        recipient_id="255757xxxxxx",
+        button={
+            "type": "button",
+            "body": {
+                "text": "This is a test button"
+            },
+            "action": {
+                "buttons": [
+                    {
+                        "type": "reply",
+                        "reply": {
+                            "id": "b1",
+                            "title": "This is button 1"
+                        }
+                    },
+                    {
+                        "type": "reply",
+                        "reply": {
+                            "id": "b2",
+                            "title": "this is button 2"
+                        }
+                    }
+                ]
+            }
+      },
+    )
+```
+
 ## Sending a Template Messages
 
 Here how to send a pre-approved template message;
