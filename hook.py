@@ -10,7 +10,7 @@ app = Flask(__name__)
 # Load .env file
 load_dotenv()
 
-messenger = WhatsApp(os.getenv("TOKEN"))
+messenger = WhatsApp(os.getenv("TOKEN"),phone_number_id='104xxxxxx')
 VERIFY_TOKEN = "30cca545-3838-48b2-80a7-9e43b1ae8ce4"
 
 
