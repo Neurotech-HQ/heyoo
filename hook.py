@@ -2,7 +2,7 @@ import os
 import json
 from heyoo import WhatsApp
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, make_response
 
 
 app = Flask(__name__)
@@ -18,7 +18,9 @@ VERIFY_TOKEN = "30cca545-3838-48b2-80a7-9e43b1ae8ce4"
 def hook():
     if request.method == "GET":
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
-            return request.args.get("hub.challenge")
+            response = make_response(request.args.get("hub.challenge"), 200)
+            response.mimetype = "text/plain"
+            return response
         return "Invalid verification token"
 
     data = request.get_json()
