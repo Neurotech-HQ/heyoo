@@ -62,7 +62,7 @@ Once you're follow the above procedures, now you're ready to start hacking with 
 
 ## Authentication
 
-Here how you authenticate your application, you need to specofy two things the ```TOKEN``` and ```phone_number_id``` of your test number
+Here how you authenticate your application, you need to specify two things the ```TOKEN``` and ```phone_number_id``` of your test number
 
 ```python
 >>> from heyoo import WhatsApp
@@ -220,7 +220,7 @@ Here an example;
 Here how to send a pre-approved template message;
 
 ```python
->>> messenger.send_template("hello_world", "255757xxxxxx")
+>>> messenger.send_template("hello_world", "255757xxxxxx", components={})
 ```
 
 ## Webhook
