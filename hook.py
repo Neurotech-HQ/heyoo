@@ -1,5 +1,6 @@
 import os
 import json
+from platform import python_version_tuple
 from heyoo import WhatsApp
 from dotenv import load_dotenv
 from flask import Flask, request
@@ -9,7 +10,7 @@ app = Flask(__name__)
 
 # Load .env file
 load_dotenv()
-messenger = WhatsApp(os.getenv("TOKEN"))
+messenger = WhatsApp(os.getenv("TOKEN"), phone_number_id=os.getenv("PHONE_NUMBER_ID"))
 VERIFY_TOKEN = "30cca545-3838-48b2-80a7-9e43b1ae8ce4"
 
 
