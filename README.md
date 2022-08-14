@@ -220,7 +220,7 @@ Here an example;
 Here how to send a pre-approved template message;
 
 ```python
->>> messenger.send_template("hello_world", "255757xxxxxx")
+>>> messenger.send_template("hello_world", "255757xxxxxx", components={})
 ```
 
 ## Webhook
