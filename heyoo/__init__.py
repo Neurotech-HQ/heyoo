@@ -337,6 +337,54 @@ class WhatsApp(object):
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
 
+    def query_media_url(self, media_id):
+        """
+        Query media url from media id obtained either by manually uploading media or received media
+
+        Args:
+            media_id[str]: Media id of the media
+
+        Returns:
+            str: Media url
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.query_media_url("media_id")
+        """
+        r = requests.get(f"{self.BASE_URL}{media_id}", headers=self.headers)
+        if r.status_code == 200:
+            return r.json()["url"]
+        return None
+
+    def download_media(self, media_url, mime_type):
+        """
+        Download media from media url obtained either by manually uploading media or received media
+
+        Args:
+            media_url[str]: Media url of the media
+            mime_type[str]: Mime type of the media
+
+        Returns:
+            str: Media url
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.download_media("media_url", "image/jpeg")
+        """
+        r = requests.get(media_url, headers=self.headers)
+        content = r.content
+        extension = mime_type.split("/")[1]
+        # create a temporary file
+        try:
+            with open(f"temp.{extension}", "wb") as f:
+                f.write(content)
+            return f.name
+        except Exception as e:
+            print(e)
+            return None
+
     def preprocess(self, data):
         """
         Preprocesses the data received from the webhook.
