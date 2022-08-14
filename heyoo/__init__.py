@@ -91,7 +91,17 @@ class WhatsApp(object):
         }
         r = requests.post(self.url, headers=self.headers, json=data)
         return r.json()
-
+    
+    def send_templatev2(self, template, recipient_id,components,lang="en_US"):
+        data = {
+            "messaging_product": "whatsapp",
+            "to": recipient_id,
+            "type": "template",
+            "template": {"name": template, "language": {"code": lang}, "components":components},
+        }
+        r = requests.post(self.url, headers=self.headers, json=data)
+        return r.json()    
+    
     def send_location(self, lat, long, name, address, recipient_id):
         """
         Sends a location message to a WhatsApp user

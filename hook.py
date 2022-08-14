@@ -3,14 +3,19 @@ import json
 from platform import python_version_tuple
 from heyoo import WhatsApp
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, make_response
 
 # Initialize Flask App
 app = Flask(__name__)
 
 # Load .env file
 load_dotenv()
+<<<<<<< HEAD
 messenger = WhatsApp(os.getenv("TOKEN"), phone_number_id=os.getenv("PHONE_NUMBER_ID"))
+=======
+
+messenger = WhatsApp(os.getenv("TOKEN"),phone_number_id='104xxxxxx')
+>>>>>>> dd85c2baf3ce2f83023a69f08f89e242bf29d6ed
 VERIFY_TOKEN = "30cca545-3838-48b2-80a7-9e43b1ae8ce4"
 
 
@@ -18,7 +23,9 @@ VERIFY_TOKEN = "30cca545-3838-48b2-80a7-9e43b1ae8ce4"
 def hook():
     if request.method == "GET":
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
-            return request.args.get("hub.challenge")
+            response = make_response(request.args.get("hub.challenge"), 200)
+            response.mimetype = "text/plain"
+            return response
         return "Invalid verification token"
 
     data = request.get_json()

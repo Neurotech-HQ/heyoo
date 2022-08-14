@@ -249,6 +249,8 @@ This is an opensource project under ```MIT License``` so any one is welcome to c
 ## References 
 1. [WhatsApp Cloud API official documentation](https://developers.facebook.com/docs/whatsapp/cloud-api/)
 2. [Programming WhatsApp is now even easier for Python Developers](https://mr-collins-llb.medium.com/programming-whatsapp-is-now-even-easier-for-python-developers-e1a4343deed6)
+3. [Meet Heyoo — an Open-source Python Wrapper for WhatsApp Cloud API](https://betterprogramming.pub/programming-whatsapp-is-now-even-easier-for-python-developers-e1a4343deed6)
+4. [Whatsapp Cloud API: How to send WhatsApp messages from Python?](https://medium.com/@today.rafi/whatsapp-cloud-api-how-to-send-whatsapp-messages-from-python-9baa03c93b5d)
 
 ## Related 
 1. [WhatsApp Cloud API PHP Wrapper ](https://github.com/pro-cms/whatsappcloud-php)
