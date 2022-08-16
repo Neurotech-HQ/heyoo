@@ -12,7 +12,7 @@ Unofficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.co
 ## Features supported
 
 1. Sending messages
-2. Sending  Media (images, audio, video and ducuments)
+2. Sending  Media (images, audio, video and documents)
 3. Sending location
 4. Sending interactive buttons
 5. Sending template messages
