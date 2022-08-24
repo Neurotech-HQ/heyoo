@@ -6,8 +6,8 @@ if __name__ == "__main__":
     load_dotenv()
     messenger = WhatsApp(token=getenv("TOKEN"),phone_number_id=getenv("PhoneNumberID"))
 
-    response = messenger.send_image(
-        image="https://i.imgur.com/Fh7XVYY.jpeg",
+    response = messenger.send_audio(
+        audio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         recipient_id="255757xxxxxx",
     )
 
