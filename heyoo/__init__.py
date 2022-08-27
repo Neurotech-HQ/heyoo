@@ -354,7 +354,7 @@ class WhatsApp(object):
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.query_media_url("media_id")
         """
-        r = requests.get(f"{self.base_url}{media_id}", headers=self.headers)
+        r = requests.get(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
             return r.json()["url"]
         return None
