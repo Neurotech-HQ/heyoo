@@ -1,6 +1,7 @@
 """
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
+import mimetypes
 import requests
 import logging
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -28,9 +29,9 @@ class WhatsApp(object):
             phone_number_id[str]: Phone number id for the WhatsApp cloud API obtained from the developer portal
         """
         self.token = token
-        self.base_url = "https://graph.facebook.com/v13.0"
+        self.phone_number_id = phone_number_id
+        self.base_url = "https://graph.facebook.com/v14.0"
         self.url = f"{self.base_url}/{phone_number_id}/messages"
-        self.media_url = f"{self.base_url}/{phone_number_id}/media"
 
         self.headers = {
             "Content-Type": "application/json",
@@ -360,18 +361,52 @@ class WhatsApp(object):
             >>> from whatsapp import WhatsApp
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.upload_media("/path/to/media")
+
+        REFERENCE: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#
         """
-        data = {
+        form_data = {
+            "file": (media, open(media, "rb"), mimetypes.guess_type(media)[0]),
             "messaging_product": "whatsapp",
-            "type": "media",
-            "media": {"file": open(media, "rb")},
+            "type": mimetypes.guess_type(media)[0],
         }
+        form_data = MultipartEncoder(fields=form_data)
+        headers = self.headers.copy()
+        headers["Content-Type"] = form_data.content_type
+        logging.info(f"Content-Type: {form_data.content_type}")
         logging.info(f"Uploading media {media}")
-        r = requests.post(self.media_url, headers=self.headers, json=data)
+        r = requests.post(
+            f"{self.base_url}/{self.phone_number_id}/media",
+            headers=self.headers,
+            data=form_data,
+        )
         if r.status_code == 200:
             logging.info(f"Media {media} uploaded")
             return r.json()
         logging.info(f"Error uploading media {media}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return None
+
+    def delete_media(self, media_id: str):
+        """
+        Deletes a media from the cloud api
+
+        Args:
+            media_id[str]: Id of the media to be deleted
+        """
+        data = {
+            "messaging_product": "whatsapp",
+            "type": "media",
+            "media": {"id": media_id},
+        }
+        logging.info(f"Deleting media {media_id}")
+        r = requests.delete(
+            f"{self.base_url}/{media_id}", headers=self.headers, json=data
+        )
+        if r.status_code == 200:
+            logging.info(f"Media {media_id} deleted")
+            return r.json()
+        logging.info(f"Error deleting media {media_id}")
         logging.info(f"Status code: {r.status_code}")
         logging.info(f"Response: {r.json()}")
         return None
@@ -461,18 +496,26 @@ class WhatsApp(object):
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.query_media_url("media_id")
         """
+
+        logging.info(f"Querying media url for {media_id}")
         r = requests.get(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
+            logging.info(f"Media url queried for {media_id}")
             return r.json()["url"]
+        logging.info(f"Media url not queried for {media_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return None
 
-    def download_media(self, media_url, mime_type):
+    def download_media(self, media_url: str, mime_type: str, file_path: str = "temp"):
         """
         Download media from media url obtained either by manually uploading media or received media
 
         Args:
             media_url[str]: Media url of the media
             mime_type[str]: Mime type of the media
+            file_path[str]: Path of the file to be downloaded to. Default is "temp"
+                            Do not include the file extension. It will be added automatically.
 
         Returns:
             str: Media url
@@ -481,17 +524,24 @@ class WhatsApp(object):
             >>> from whatsapp import WhatsApp
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.download_media("media_url", "image/jpeg")
+            >>> whatsapp.download_media("media_url", "video/mp4", "path/to/file") #do not include the file extension
         """
         r = requests.get(media_url, headers=self.headers)
         content = r.content
         extension = mime_type.split("/")[1]
         # create a temporary file
         try:
-            with open(f"temp.{extension}", "wb") as f:
+
+            save_file_here = (
+                f"{file_path}.{extension}" if file_path else f"temp.{extension}"
+            )
+            with open(save_file_here, "wb") as f:
                 f.write(content)
+            logging.info(f"Media downloaded to {save_file_here}")
             return f.name
         except Exception as e:
             print(e)
+            logging.info(f"Error downloading media to {save_file_here}")
             return None
 
     def preprocess(self, data):
