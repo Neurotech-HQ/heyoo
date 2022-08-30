@@ -19,8 +19,6 @@ class WhatsApp(object):
     WhatsApp Object
     """
 
-    BASE_URL = "https://graph.facebook.com/v13.0/{phone_number_id}"
-
     def __init__(self, token=None, phone_number_id=None):
         """
         Initialize the WhatsApp Object
@@ -30,11 +28,10 @@ class WhatsApp(object):
             phone_number_id[str]: Phone number id for the WhatsApp cloud API obtained from the developer portal
         """
         self.token = token
-        self.base_url = self.BASE_URL.format(phone_number_id=phone_number_id)
-        self.url = f"{self.base_url}/messages"  # URL for sending messages
-        self.media_url = (
-            f"{self.base_url}/media"  # URL for media uploads(WhatsApp cloud API v3)
-        )
+        self.base_url = "https://graph.facebook.com/v13.0"
+        self.url = f"{self.base_url}/{phone_number_id}/messages"
+        self.media_url = f"{self.base_url}/{phone_number_id}/media"
+
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(self.token),
@@ -280,7 +277,7 @@ class WhatsApp(object):
             video[str]: Video id or link of the video
             recipient_id[str]: Phone number of the user with country code wihout +
             caption[str]: Caption of the video
-            link[bool]: Whether to send an video id or an video link, True means that the video is an id, False means that the video is a link
+            link[bool]: Whether to send a video id or a video link, True means that the video is an id, False means that the video is a link
 
         example:
             >>> from whatsapp import WhatsApp
@@ -320,7 +317,7 @@ class WhatsApp(object):
             document[str]: Document id or link of the document
             recipient_id[str]: Phone number of the user with country code wihout +
             caption[str]: Caption of the document
-            link[bool]: Whether to send an document id or an document link, True means that the document is an id, False means that the document is a link
+            link[bool]: Whether to send a document id or a document link, True means that the document is an id, False means that the document is a link
 
         Example:
             >>> from whatsapp import WhatsApp
@@ -464,7 +461,7 @@ class WhatsApp(object):
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.query_media_url("media_id")
         """
-        r = requests.get(f"{self.BASE_URL}{media_id}", headers=self.headers)
+        r = requests.get(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
             return r.json()["url"]
         return None
