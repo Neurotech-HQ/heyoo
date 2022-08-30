@@ -1,14 +1,25 @@
 """
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
-
 import requests
+import logging
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+
+
+# Setup logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
 class WhatsApp(object):
     """ "
     WhatsApp Object
     """
+
+    BASE_URL = "https://graph.facebook.com/v13.0/{phone_number_id}"
 
     def __init__(self, token=None, phone_number_id=None):
         """
@@ -19,7 +30,11 @@ class WhatsApp(object):
             phone_number_id[str]: Phone number id for the WhatsApp cloud API obtained from the developer portal
         """
         self.token = token
-        self.url = f"https://graph.facebook.com/v13.0/{phone_number_id}/messages"
+        self.base_url = self.BASE_URL.format(phone_number_id=phone_number_id)
+        self.url = f"{self.base_url}/messages"  # URL for sending messages
+        self.media_url = (
+            f"{self.base_url}/media"  # URL for media uploads(WhatsApp cloud API v3)
+        )
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(self.token),
@@ -52,7 +67,14 @@ class WhatsApp(object):
             "type": "text",
             "text": {"preview_url": preview_url, "body": message},
         }
+        logging.info(f"Sending message to {recipient_id}")
         r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Message sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Message not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_template(self, template, recipient_id, lang="en_US", components={}):
@@ -89,7 +111,14 @@ class WhatsApp(object):
                 "components": components,
             },
         }
+        logging.info(f"Sending template to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Template sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Template not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_templatev2(self, template, recipient_id, components, lang="en_US"):
@@ -103,7 +132,14 @@ class WhatsApp(object):
                 "components": components,
             },
         }
+        logging.info(f"Sending template to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Template sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Template not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_location(self, lat, long, name, address, recipient_id):
@@ -133,7 +169,14 @@ class WhatsApp(object):
                 "address": address,
             },
         }
+        logging.info(f"Sending location to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Location sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Location not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(r.json())
         return r.json()
 
     def send_image(
@@ -179,7 +222,14 @@ class WhatsApp(object):
                 "type": "image",
                 "image": {"id": image, "caption": caption},
             }
+        logging.info(f"Sending image to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Image sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Image not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(r.json())
         return r.json()
 
     def send_audio(self, audio, recipient_id, link=True):
@@ -211,7 +261,14 @@ class WhatsApp(object):
                 "type": "audio",
                 "audio": {"id": audio},
             }
+        logging.info(f"Sending audio to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Audio sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Audio not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_video(self, video, recipient_id, caption=None, link=True):
@@ -244,7 +301,14 @@ class WhatsApp(object):
                 "type": "video",
                 "video": {"id": video, "caption": caption},
             }
+        logging.info(f"Sending video to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Video sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Video not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_document(self, document, recipient_id, caption=None, link=True):
@@ -277,8 +341,43 @@ class WhatsApp(object):
                 "type": "document",
                 "document": {"id": document, "caption": caption},
             }
+
+        logging.info(f"Sending document to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Document sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Document not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
+
+    def upload_media(self, media: str):
+        """
+        Uploads a media to the cloud api and returns the id of the media
+
+        Args:
+            media[str]: Path of the media to be uploaded
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.upload_media("/path/to/media")
+        """
+        data = {
+            "messaging_product": "whatsapp",
+            "type": "media",
+            "media": {"file": open(media, "rb")},
+        }
+        logging.info(f"Uploading media {media}")
+        r = requests.post(self.media_url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Media {media} uploaded")
+            return r.json()
+        logging.info(f"Error uploading media {media}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return None
 
     def create_button(self, button):
         """
@@ -313,7 +412,14 @@ class WhatsApp(object):
             "type": "interactive",
             "interactive": self.create_button(button),
         }
+        logging.info(f"Sending buttons to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Buttons sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Buttons not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_reply_button(self, button, recipient_id):
@@ -335,9 +441,15 @@ class WhatsApp(object):
             "interactive": button,
         }
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Reply buttons sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Reply buttons not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def query_media_url(self, media_id):
+    def query_media_url(self, media_id: str):
         """
         Query media url from media id obtained either by manually uploading media or received media
 
