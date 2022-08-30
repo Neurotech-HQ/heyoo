@@ -394,15 +394,8 @@ class WhatsApp(object):
         Args:
             media_id[str]: Id of the media to be deleted
         """
-        data = {
-            "messaging_product": "whatsapp",
-            "type": "media",
-            "media": {"id": media_id},
-        }
         logging.info(f"Deleting media {media_id}")
-        r = requests.delete(
-            f"{self.base_url}/{media_id}", headers=self.headers, json=data
-        )
+        r = requests.delete(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
             logging.info(f"Media {media_id} deleted")
             return r.json()
