@@ -6,6 +6,7 @@ import mimetypes
 import requests
 import logging
 from requests_toolbelt.multipart.encoder import MultipartEncoder
+from typing import Optional, Dict, Any, List, Union, Tuple, Callable
 
 
 # Setup logging
@@ -347,6 +348,51 @@ class WhatsApp(object):
             logging.info(f"Document sent to {recipient_id}")
             return r.json()
         logging.info(f"Document not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
+        return r.json()
+
+    def send_contacts(self, contacts: List[Dict[Any, Any]], recipient_id: str):
+        """send_contacts
+
+        Send a list of contacts to a user
+
+        Args:
+            contacts(List[Dict[Any, Any]]): List of contacts to send
+            recipient_id(str): Phone number of the user with country code wihout +
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> contacts = [{
+                "addresses": [{
+                    "street": "STREET",
+                    "city": "CITY",
+                    "state": "STATE",
+                    "zip": "ZIP",
+                    "country": "COUNTRY",
+                    "country_code": "COUNTRY_CODE",
+                    "type": "HOME"
+                    },
+                ....
+                }
+            ]
+
+        REFERENCE: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#contacts-object
+        """
+
+        data = {
+            "messaging_product": "whatsapp",
+            "to": recipient_id,
+            "type": "contacts",
+            "contacts": contacts,
+        }
+        logging.info(f"Sending contacts to {recipient_id}")
+        r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Contacts sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Contacts not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
         logging.error(f"Response: {r.json()}")
         return r.json()
