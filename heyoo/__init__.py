@@ -77,6 +77,37 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return r.json()
 
+    def reply_to_message(
+        self, message_id: str, recipient_id: str, message: str, preview_url: bool = True
+    ):
+        """
+        Replies to a message
+
+        Args:
+            message_id[str]: Message id of the message to be replied to
+            recipient_id[str]: Phone number of the user with country code wihout +
+            message[str]: Message to be sent to the user
+            preview_url[bool]: Whether to send a preview url or not
+        """
+        data = {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient_id,
+            "type": "text",
+            "context": {"message_id": message_id},
+            "text": {"preview_url": preview_url, "body": message},
+        }
+
+        logging.info(f"Replying to {message_id}")
+        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Message sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Message not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return r.json()
+
     def send_template(self, template, recipient_id, lang="en_US", components={}):
         """
         Sends a template message to a WhatsApp user, Template messages can either be;
