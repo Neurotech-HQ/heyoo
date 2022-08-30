@@ -1,6 +1,7 @@
 """
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
+import os
 import mimetypes
 import requests
 import logging
@@ -365,7 +366,11 @@ class WhatsApp(object):
         REFERENCE: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#
         """
         form_data = {
-            "file": (media, open(media, "rb"), mimetypes.guess_type(media)[0]),
+            "file": (
+                media,
+                open(os.path.realpath(media), "rb"),
+                mimetypes.guess_type(media)[0],
+            ),
             "messaging_product": "whatsapp",
             "type": mimetypes.guess_type(media)[0],
         }
