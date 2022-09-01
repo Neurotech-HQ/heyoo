@@ -1,8 +1,20 @@
 """
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
-
+import os
+import mimetypes
 import requests
+import logging
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+from typing import Optional, Dict, Any, List, Union, Tuple, Callable
+
+
+# Setup logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
 class WhatsApp(object):
@@ -19,7 +31,8 @@ class WhatsApp(object):
             phone_number_id[str]: Phone number id for the WhatsApp cloud API obtained from the developer portal
         """
         self.token = token
-        self.base_url = 'https://graph.facebook.com/v13.0'
+        self.phone_number_id = phone_number_id
+        self.base_url = "https://graph.facebook.com/v14.0"
         self.url = f"{self.base_url}/{phone_number_id}/messages"
 
         self.headers = {
@@ -54,7 +67,45 @@ class WhatsApp(object):
             "type": "text",
             "text": {"preview_url": preview_url, "body": message},
         }
+        logging.info(f"Sending message to {recipient_id}")
         r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Message sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Message not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return r.json()
+
+    def reply_to_message(
+        self, message_id: str, recipient_id: str, message: str, preview_url: bool = True
+    ):
+        """
+        Replies to a message
+
+        Args:
+            message_id[str]: Message id of the message to be replied to
+            recipient_id[str]: Phone number of the user with country code wihout +
+            message[str]: Message to be sent to the user
+            preview_url[bool]: Whether to send a preview url or not
+        """
+        data = {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient_id,
+            "type": "text",
+            "context": {"message_id": message_id},
+            "text": {"preview_url": preview_url, "body": message},
+        }
+
+        logging.info(f"Replying to {message_id}")
+        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Message sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Message not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_template(self, template, recipient_id, lang="en_US", components={}):
@@ -91,7 +142,14 @@ class WhatsApp(object):
                 "components": components,
             },
         }
+        logging.info(f"Sending template to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Template sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Template not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_templatev2(self, template, recipient_id, components, lang="en_US"):
@@ -105,7 +163,14 @@ class WhatsApp(object):
                 "components": components,
             },
         }
+        logging.info(f"Sending template to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Template sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Template not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_location(self, lat, long, name, address, recipient_id):
@@ -135,7 +200,14 @@ class WhatsApp(object):
                 "address": address,
             },
         }
+        logging.info(f"Sending location to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Location sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Location not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(r.json())
         return r.json()
 
     def send_image(
@@ -181,7 +253,14 @@ class WhatsApp(object):
                 "type": "image",
                 "image": {"id": image, "caption": caption},
             }
+        logging.info(f"Sending image to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Image sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Image not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(r.json())
         return r.json()
 
     def send_audio(self, audio, recipient_id, link=True):
@@ -213,7 +292,14 @@ class WhatsApp(object):
                 "type": "audio",
                 "audio": {"id": audio},
             }
+        logging.info(f"Sending audio to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Audio sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Audio not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_video(self, video, recipient_id, caption=None, link=True):
@@ -246,7 +332,14 @@ class WhatsApp(object):
                 "type": "video",
                 "video": {"id": video, "caption": caption},
             }
+        logging.info(f"Sending video to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Video sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Video not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_document(self, document, recipient_id, caption=None, link=True):
@@ -279,8 +372,119 @@ class WhatsApp(object):
                 "type": "document",
                 "document": {"id": document, "caption": caption},
             }
+
+        logging.info(f"Sending document to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Document sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Document not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
+
+    def send_contacts(self, contacts: List[Dict[Any, Any]], recipient_id: str):
+        """send_contacts
+
+        Send a list of contacts to a user
+
+        Args:
+            contacts(List[Dict[Any, Any]]): List of contacts to send
+            recipient_id(str): Phone number of the user with country code wihout +
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> contacts = [{
+                "addresses": [{
+                    "street": "STREET",
+                    "city": "CITY",
+                    "state": "STATE",
+                    "zip": "ZIP",
+                    "country": "COUNTRY",
+                    "country_code": "COUNTRY_CODE",
+                    "type": "HOME"
+                    },
+                ....
+                }
+            ]
+
+        REFERENCE: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#contacts-object
+        """
+
+        data = {
+            "messaging_product": "whatsapp",
+            "to": recipient_id,
+            "type": "contacts",
+            "contacts": contacts,
+        }
+        logging.info(f"Sending contacts to {recipient_id}")
+        r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Contacts sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Contacts not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
+        return r.json()
+
+    def upload_media(self, media: str):
+        """
+        Uploads a media to the cloud api and returns the id of the media
+
+        Args:
+            media[str]: Path of the media to be uploaded
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.upload_media("/path/to/media")
+
+        REFERENCE: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#
+        """
+        form_data = {
+            "file": (
+                media,
+                open(os.path.realpath(media), "rb"),
+                mimetypes.guess_type(media)[0],
+            ),
+            "messaging_product": "whatsapp",
+            "type": mimetypes.guess_type(media)[0],
+        }
+        form_data = MultipartEncoder(fields=form_data)
+        headers = self.headers.copy()
+        headers["Content-Type"] = form_data.content_type
+        logging.info(f"Content-Type: {form_data.content_type}")
+        logging.info(f"Uploading media {media}")
+        r = requests.post(
+            f"{self.base_url}/{self.phone_number_id}/media",
+            headers=self.headers,
+            data=form_data,
+        )
+        if r.status_code == 200:
+            logging.info(f"Media {media} uploaded")
+            return r.json()
+        logging.info(f"Error uploading media {media}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return None
+
+    def delete_media(self, media_id: str):
+        """
+        Deletes a media from the cloud api
+
+        Args:
+            media_id[str]: Id of the media to be deleted
+        """
+        logging.info(f"Deleting media {media_id}")
+        r = requests.delete(f"{self.base_url}/{media_id}", headers=self.headers)
+        if r.status_code == 200:
+            logging.info(f"Media {media_id} deleted")
+            return r.json()
+        logging.info(f"Error deleting media {media_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return None
 
     def create_button(self, button):
         """
@@ -315,7 +519,14 @@ class WhatsApp(object):
             "type": "interactive",
             "interactive": self.create_button(button),
         }
+        logging.info(f"Sending buttons to {recipient_id}")
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Buttons sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Buttons not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
     def send_reply_button(self, button, recipient_id):
@@ -337,9 +548,15 @@ class WhatsApp(object):
             "interactive": button,
         }
         r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Reply buttons sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Reply buttons not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def query_media_url(self, media_id):
+    def query_media_url(self, media_id: str):
         """
         Query media url from media id obtained either by manually uploading media or received media
 
@@ -354,18 +571,26 @@ class WhatsApp(object):
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.query_media_url("media_id")
         """
+
+        logging.info(f"Querying media url for {media_id}")
         r = requests.get(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
+            logging.info(f"Media url queried for {media_id}")
             return r.json()["url"]
+        logging.info(f"Media url not queried for {media_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
         return None
 
-    def download_media(self, media_url, mime_type):
+    def download_media(self, media_url: str, mime_type: str, file_path: str = "temp"):
         """
         Download media from media url obtained either by manually uploading media or received media
 
         Args:
             media_url[str]: Media url of the media
             mime_type[str]: Mime type of the media
+            file_path[str]: Path of the file to be downloaded to. Default is "temp"
+                            Do not include the file extension. It will be added automatically.
 
         Returns:
             str: Media url
@@ -374,17 +599,24 @@ class WhatsApp(object):
             >>> from whatsapp import WhatsApp
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.download_media("media_url", "image/jpeg")
+            >>> whatsapp.download_media("media_url", "video/mp4", "path/to/file") #do not include the file extension
         """
         r = requests.get(media_url, headers=self.headers)
         content = r.content
         extension = mime_type.split("/")[1]
         # create a temporary file
         try:
-            with open(f"temp.{extension}", "wb") as f:
+
+            save_file_here = (
+                f"{file_path}.{extension}" if file_path else f"temp.{extension}"
+            )
+            with open(save_file_here, "wb") as f:
                 f.write(content)
+            logging.info(f"Media downloaded to {save_file_here}")
             return f.name
         except Exception as e:
             print(e)
+            logging.info(f"Error downloading media to {save_file_here}")
             return None
 
     def preprocess(self, data):

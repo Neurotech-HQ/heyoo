@@ -97,6 +97,23 @@ Here an example;
     )
 ```
 
+> Note: You can also send media from your local machine but you have to upload it first to Whatsapp Cloud API, you can do this using the ```upload_media``` method. and then use the returned object id to send the media.
+
+Here an example;
+
+```python
+>>> media_id = messenger.upload_media(
+        media='path/to/media',
+    )['id']
+>>> messenger.send_image(
+        image=media_id,
+        recipient_id="255757xxxxxx",
+        link=False
+    )
+```
+
+> Note: Don't forget to set the link to False, and also you can use the same technique for sending video, audio, gif and document from your local machine.
+
 ## Sending Video
 
 Here an example;

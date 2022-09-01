@@ -9,19 +9,17 @@ with open(path.join(this_directory, "description.md"), encoding="utf-8") as f:
 
 setup(
     name="heyoo",
-    version="0.0.4",
+    version="0.0.5",
     description="Opensource python wrapper to WhatsApp Cloud API",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Neurotech-HQ/heyoo",
-    download_url="https://github.com/Neurotech-HQ/heyoo/archive/refs/tags/alphav0.1.tar.gz",
+    download_url="https://github.com/Neurotech-HQ/heyoo/archive/refs/tags/v0.1.tar.gz",
     author="Jordan Kalebu",
     author_email="isaackeinstein@gmail.com",
     license="MIT",
     packages=["heyoo"],
-    install_requires=[
-        "requests"
-    ],
+    install_requires=["requests"],
     keywords=[
         "heyoo",
         "heyoo-libary",
