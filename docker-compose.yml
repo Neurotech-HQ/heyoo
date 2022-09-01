@@ -1,0 +1,10 @@
+version: "3"
+services:
+  hook:
+    container_name: heyoo
+    image: heyoo:0.0.4
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
