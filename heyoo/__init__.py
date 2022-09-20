@@ -495,13 +495,17 @@ class WhatsApp(object):
         Args:
                button[dict]: A dictionary containing the button data
         """
-        return {
+        data = {
             "type": "list",
-            "header": {"type": "text", "text": button.get("header")},
-            "body": {"text": button.get("body")},
-            "footer": {"text": button.get("footer")},
-            "action": button.get("action"),
+            "action": button.get("action")
         }
+        if button.get("header"):
+            data["header"] = {"type": "text", "text": button.get("header")}
+        if button.get("body"):
+            data["body"] = {"text": button.get("body")}
+        if button.get("footer"):
+            data["footer"] = {"text": button.get("footer")}
+        return data
 
     def send_button(self, button, recipient_id):
         """
