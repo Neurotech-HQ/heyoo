@@ -263,6 +263,9 @@ class WhatsApp(object):
         logging.error(r.json())
         return r.json()
 
+    def send_sticker(self, sticker: str, recipient_id: str, linl=True):
+        pass
+
     def send_audio(self, audio, recipient_id, link=True):
         """
         Sends an audio message to a WhatsApp user
