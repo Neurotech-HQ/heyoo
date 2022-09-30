@@ -44,6 +44,13 @@ pip install  --upgrade heyoo
 pip3 install --upgrade heyoo
 ```
 
+### Running on Docker
+To run an instance in docker run the commands below
+```bash
+$ docker compose build
+$ docker compose up
+```
+
 ## Setting up
 
 To get started using this package, you will need **TOKEN** and **TEST WHATSAPP NUMBER** which you can get by from [Facebook Developer Portal](https://developers.facebook.com/)
