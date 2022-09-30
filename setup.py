@@ -9,7 +9,7 @@ with open(path.join(this_directory, "description.md"), encoding="utf-8") as f:
 
 setup(
     name="heyoo",
-    version="0.0.5",
+    version="0.0.6",
     description="Opensource python wrapper to WhatsApp Cloud API",
     long_description=long_description,
     long_description_content_type="text/markdown",
