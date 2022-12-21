@@ -461,7 +461,7 @@ class WhatsApp(object):
         logging.info(f"Uploading media {media}")
         r = requests.post(
             f"{self.base_url}/{self.phone_number_id}/media",
-            headers=self.headers,
+            headers=headers,
             data=form_data,
         )
         if r.status_code == 200:
@@ -498,10 +498,7 @@ class WhatsApp(object):
         Args:
                button[dict]: A dictionary containing the button data
         """
-        data = {
-            "type": "list",
-            "action": button.get("action")
-        }
+        data = {"type": "list", "action": button.get("action")}
         if button.get("header"):
             data["header"] = {"type": "text", "text": button.get("header")}
         if button.get("body"):
