@@ -797,7 +797,7 @@ class WhatsApp(object):
         """
         data = self.preprocess(data)
         if "messages" in data:
-            if "image" in data["messages"][0]:
+            if "document" in data["messages"][0]:
                 return data["messages"][0]["document"]
 
 
