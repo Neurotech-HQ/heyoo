@@ -780,6 +780,26 @@ class WhatsApp(object):
         if "messages" in data:
             if "image" in data["messages"][0]:
                 return data["messages"][0]["image"]
+     
+    def get_document(self, data) -> (Dict | None):
+        """ "
+        Extracts the document of the sender from the data received from the webhook.
+
+        Args:
+            data[dict]: The data received from the webhook
+        Returns:
+            dict: The document_id of an image sent by the sender
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> document_id = whatsapp.get_document(data)
+        """
+        data = self.preprocess(data)
+        if "messages" in data:
+            if "image" in data["messages"][0]:
+                return data["messages"][0]["document"]
+
 
     def get_audio(self, data) -> (Dict | None):
         """
