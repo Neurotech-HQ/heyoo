@@ -85,8 +85,8 @@ def hook():
                 print(f"{mobile} sent audio {audio_filename}")
                 logging.info(f"{mobile} sent audio {audio_filename}")
 
-            elif message_type == "file":
-                file = messenger.get_file(data)
+            elif message_type == "document":
+                file = messenger.get_document(data)
                 file_id, mime_type = file["id"], file["mime_type"]
                 file_url = messenger.query_media_url(file_id)
                 file_filename = messenger.download_media(file_url, mime_type)
