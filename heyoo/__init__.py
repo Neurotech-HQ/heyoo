@@ -488,6 +488,27 @@ class WhatsApp(object):
         logging.info(f"Status code: {r.status_code}")
         logging.info(f"Response: {r.json()}")
         return None
+    
+    def mark_as_read(self, message_id: str):
+        """
+        Marks a message as read
+        
+        Args: 
+            message_id[str]: Id of the message to be marked as read
+        """
+        headers = {
+            'Authorization': f'Bearer {self.token}',
+            'Content-Type': 'application/json',
+        }
+
+        json_data = {
+            'messaging_product': 'whatsapp',
+            'status': 'read',
+            'message_id': message_id,
+        }
+        response = requests.post(
+            f'https://graph.facebook.com/v15.0/{self.phone_number_id}/messages', headers=headers, json=json_data).json()
+        return response["success"]
 
     def create_button(self, button):
         """
