@@ -12,11 +12,12 @@ Unofficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.co
 ## Features supported
 
 1. Sending messages
-2. Sending  Media (images, audio, video and documents)
-3. Sending location
-4. Sending interactive buttons
-5. Sending template messages
-6. Parsing messages and media received
+2. Marking messages as read
+3. Sending  Media (images, audio, video and documents)
+4. Sending location
+5. Sending interactive buttons
+6. Sending template messages
+7. Parsing messages and media received
 
 ## Getting started
 
@@ -89,6 +90,14 @@ Use this method to send text message to a WhatsApp number.
 >>> messenger.send_message('Your message ', 'Mobile eg: 255757xxxxx')
 ```
 
+## Marking messages as read
+
+Use this method to mark a previously sent text message as read.
+
+```python
+>>> messenger.mark_as_read('Message ID')
+```
+    
 ## Sending Images
 
 When sending media(image, video, audio, gif and document ), you can either specify a link containing  the media or specify object id, you can do this using the same method.
