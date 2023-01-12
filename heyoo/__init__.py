@@ -33,6 +33,7 @@ class WhatsApp(object):
         self.token = token
         self.phone_number_id = phone_number_id
         self.base_url = "https://graph.facebook.com/v14.0"
+        self.v15_base_url = "https://graph.facebook.com/v15.0"
         self.url = f"{self.base_url}/{phone_number_id}/messages"
 
         self.headers = {
@@ -507,7 +508,7 @@ class WhatsApp(object):
             'message_id': message_id,
         }
         response = requests.post(
-            f'https://graph.facebook.com/v15.0/{self.phone_number_id}/messages', headers=headers, json=json_data).json()
+            f'{self.v15_base_url}/{self.phone_number_id}/messages', headers=headers, json=json_data).json()
         return response["success"]
 
     def create_button(self, button):
