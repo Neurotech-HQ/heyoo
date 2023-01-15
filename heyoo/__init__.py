@@ -109,49 +109,49 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def send_template(self, template, recipient_id, lang="en_US", components={}):
-        """
-        Sends a template message to a WhatsApp user, Template messages can either be;
-            1. Text template
-            2. Media based template
-            3. Interactive template
+    def send_template(self, template: str, recipient_id: str, recipient_type="individual",
+                        lang: str = "en_US", components: List = None):  
+            """
+            Sends a template message to a WhatsApp user, Template messages can either be;
+                1. Text template
+                2. Media based template
+                3. Interactive template
+            You can customize the template message by passing a dictionary of components.
+            You can find the available components in the documentation.
+            https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates
+            Args:
+                template[str]: Template name to be sent to the user
+                recipient_id[str]: Phone number of the user with country code wihout +
+                lang[str]: Language of the template message
+                components[list]: List of components to be sent to the user  # CHANGE
+            Example:
+                >>> from whatsapp import WhatsApp
+                >>> whatsapp = WhatsApp(token, phone_number_id)
+                >>> whatsapp.send_template("hello_world", "5511999999999", lang="en_US"))
+            """
+            if components is None:  # TO NOT USE LIST AS DEFAULT, BECAUSE IT IS MUTABLE
+                components = []
+            data = {
+                "messaging_product": "whatsapp",
+                "recipient_type": recipient_type,
+                "to": recipient_id,
+                "type": "template",
+                "template": {
+                    "name": template,
+                    "language": {"code": lang},
+                    "components": components,
+                },
+            }
+            logging.info(f"Sending template to {recipient_id}")
+            r = requests.post(self.url, headers=self.headers, json=data)
 
-        You can customize the template message by passing a dictionary of components.
-
-        You can find the available components in the documentation.
-        https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates
-
-        Args:
-            template[str]: Template name to be sent to the user
-            recipient_id[str]: Phone number of the user with country code wihout +
-            lang[str]: Language of the template message
-            components[dict]: Dictionary of components to be sent to the user
-
-
-        Example:
-            >>> from whatsapp import WhatsApp
-            >>> whatsapp = WhatsApp(token, phone_number_id)
-            >>> whatsapp.send_template("hello_world", "5511999999999", lang="en_US"))
-        """
-        data = {
-            "messaging_product": "whatsapp",
-            "to": recipient_id,
-            "type": "template",
-            "template": {
-                "name": template,
-                "language": {"code": lang},
-                "components": components,
-            },
-        }
-        logging.info(f"Sending template to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
-        if r.status_code == 200:
-            logging.info(f"Template sent to {recipient_id}")
+            if r.status_code == 200:
+                logging.info(f"Template sent to {recipient_id}")
+                return r.json()
+            logging.info(f"Template not sent to {recipient_id}")
+            logging.info(f"Status code: {r.status_code}")
+            logging.info(f"Response: {r.json()}")
             return r.json()
-        logging.info(f"Template not sent to {recipient_id}")
-        logging.info(f"Status code: {r.status_code}")
-        logging.info(f"Response: {r.json()}")
-        return r.json()
 
     def send_templatev2(self, template, recipient_id, components, lang="en_US"):
         data = {
