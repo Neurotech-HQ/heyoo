@@ -656,7 +656,7 @@ class WhatsApp(object):
         """
         return data["entry"][0]["changes"][0]["value"]
 
-    def get_mobile(self, data):
+    def get_mobile(self, data)-> Union[str, None]:
         """
         Extracts the mobile number of the sender from the data received from the webhook.
 
@@ -674,7 +674,7 @@ class WhatsApp(object):
         if "contacts" in data:
             return data["contacts"][0]["wa_id"]
 
-    def get_name(self, data):
+    def get_name(self, data)-> Union[str, None]:
         """
         Extracts the name of the sender from the data received from the webhook.
 
@@ -691,7 +691,7 @@ class WhatsApp(object):
         if contact:
             return contact["contacts"][0]["profile"]["name"]
 
-    def get_message(self, data):
+    def get_message(self, data)-> Union[str, None]:
         """
         Extracts the text message of the sender from the data received from the webhook.
 
@@ -708,7 +708,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["text"]["body"]
 
-    def get_message_id(self, data):
+    def get_message_id(self, data)-> Union[str, None]:
         """
         Extracts the message id of the sender from the data received from the webhook.
 
@@ -725,7 +725,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["id"]
 
-    def get_message_timestamp(self, data):
+    def get_message_timestamp(self, data)-> Union[str, None]:
         """ "
         Extracts the timestamp of the message from the data received from the webhook.
 
@@ -742,7 +742,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["timestamp"]
 
-    def get_interactive_response(self, data):
+    def get_interactive_response(self, data)-> Union[Dict, None]:
         """
          Extracts the response of the interactive message from the data received from the webhook.
 
@@ -764,7 +764,7 @@ class WhatsApp(object):
             if "interactive" in data["messages"][0]:
                 return data["messages"][0]["interactive"]
 
-    def get_location(self, data):
+    def get_location(self, data)-> Union[Dict, None]:
         """
         Extracts the location of the sender from the data received from the webhook.
 
@@ -784,7 +784,7 @@ class WhatsApp(object):
             if "location" in data["messages"][0]:
                 return data["messages"][0]["location"]
 
-    def get_image(self, data):
+    def get_image(self, data)-> Union[Dict, None]:
         """ "
         Extracts the image of the sender from the data received from the webhook.
 
@@ -803,7 +803,7 @@ class WhatsApp(object):
             if "image" in data["messages"][0]:
                 return data["messages"][0]["image"]
      
-    def get_document(self, data):
+    def get_document(self, data)-> Union[Dict, None]:
         """ "
         Extracts the document of the sender from the data received from the webhook.
 
@@ -823,7 +823,7 @@ class WhatsApp(object):
                 return data["messages"][0]["document"]
 
 
-    def get_audio(self, data):
+    def get_audio(self, data)-> Union[Dict, None]:
         """
         Extracts the audio of the sender from the data received from the webhook.
 
@@ -843,7 +843,7 @@ class WhatsApp(object):
             if "audio" in data["messages"][0]:
                 return data["messages"][0]["audio"]
 
-    def get_video(self, data):
+    def get_video(self, data)-> Union[Dict, None]:
         """
         Extracts the video of the sender from the data received from the webhook.
 
@@ -863,7 +863,7 @@ class WhatsApp(object):
             if "video" in data["messages"][0]:
                 return data["messages"][0]["video"]
 
-    def get_message_type(self, data):
+    def get_message_type(self, data)-> Union[str, None]:
         """
         Gets the type of the message sent by the sender from the data received from the webhook.
 
@@ -883,7 +883,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["type"]
 
-    def get_delivery(self, data):
+    def get_delivery(self, data)-> Union[Dict, None]:
         """
         Extracts the delivery status of the message from the data received from the webhook.
         Args:
