@@ -1,6 +1,7 @@
 """
 Unofficial python wrapper for the WhatsApp Cloud API.
 """
+from __future__ import annotations
 import os
 import mimetypes
 import requests
