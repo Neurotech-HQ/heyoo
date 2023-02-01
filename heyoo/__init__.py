@@ -110,49 +110,55 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def send_template(self, template: str, recipient_id: str, recipient_type="individual",
-                        lang: str = "en_US", components: List = None):  
-            """
-            Sends a template message to a WhatsApp user, Template messages can either be;
-                1. Text template
-                2. Media based template
-                3. Interactive template
-            You can customize the template message by passing a dictionary of components.
-            You can find the available components in the documentation.
-            https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates
-            Args:
-                template[str]: Template name to be sent to the user
-                recipient_id[str]: Phone number of the user with country code wihout +
-                lang[str]: Language of the template message
-                components[list]: List of components to be sent to the user  # CHANGE
-            Example:
-                >>> from whatsapp import WhatsApp
-                >>> whatsapp = WhatsApp(token, phone_number_id)
-                >>> whatsapp.send_template("hello_world", "5511999999999", lang="en_US"))
-            """
-            if components is None:  # TO NOT USE LIST AS DEFAULT, BECAUSE IT IS MUTABLE
-                components = []
-            data = {
-                "messaging_product": "whatsapp",
-                "recipient_type": recipient_type,
-                "to": recipient_id,
-                "type": "template",
-                "template": {
-                    "name": template,
-                    "language": {"code": lang},
-                    "components": components,
-                },
-            }
-            logging.info(f"Sending template to {recipient_id}")
-            r = requests.post(self.url, headers=self.headers, json=data)
+    def send_template(
+        self,
+        template: str,
+        recipient_id: str,
+        recipient_type="individual",
+        lang: str = "en_US",
+        components: List = None,
+    ):
+        """
+        Sends a template message to a WhatsApp user, Template messages can either be;
+            1. Text template
+            2. Media based template
+            3. Interactive template
+        You can customize the template message by passing a dictionary of components.
+        You can find the available components in the documentation.
+        https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates
+        Args:
+            template[str]: Template name to be sent to the user
+            recipient_id[str]: Phone number of the user with country code wihout +
+            lang[str]: Language of the template message
+            components[list]: List of components to be sent to the user  # CHANGE
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.send_template("hello_world", "5511999999999", lang="en_US"))
+        """
+        if components is None:  # TO NOT USE LIST AS DEFAULT, BECAUSE IT IS MUTABLE
+            components = []
+        data = {
+            "messaging_product": "whatsapp",
+            "recipient_type": recipient_type,
+            "to": recipient_id,
+            "type": "template",
+            "template": {
+                "name": template,
+                "language": {"code": lang},
+                "components": components,
+            },
+        }
+        logging.info(f"Sending template to {recipient_id}")
+        r = requests.post(self.url, headers=self.headers, json=data)
 
-            if r.status_code == 200:
-                logging.info(f"Template sent to {recipient_id}")
-                return r.json()
-            logging.info(f"Template not sent to {recipient_id}")
-            logging.info(f"Status code: {r.status_code}")
-            logging.info(f"Response: {r.json()}")
+        if r.status_code == 200:
+            logging.info(f"Template sent to {recipient_id}")
             return r.json()
+        logging.info(f"Template not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.info(f"Response: {r.json()}")
+        return r.json()
 
     def send_templatev2(self, template, recipient_id, components, lang="en_US"):
         data = {
@@ -307,7 +313,9 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
-    def send_video(self, video, recipient_id, caption=None, link=True):
+    def send_video(
+        self, video, recipient_id, caption=None, link=True
+    ) -> Dict[Any, Any]:
         """ "
         Sends a video message to a WhatsApp user
         Video messages can either be sent by passing the video id or by passing the video link.
@@ -347,7 +355,9 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
-    def send_document(self, document, recipient_id, caption=None, link=True):
+    def send_document(
+        self, document, recipient_id, caption=None, link=True
+    ) -> Dict[Any, Any]:
         """ "
         Sends a document message to a WhatsApp user
         Document messages can either be sent by passing the document id or by passing the document link.
@@ -388,7 +398,9 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
-    def send_contacts(self, contacts: List[Dict[Any, Any]], recipient_id: str):
+    def send_contacts(
+        self, contacts: List[Dict[Any, Any]], recipient_id: str
+    ) -> Dict[Any, Any]:
         """send_contacts
 
         Send a list of contacts to a user
@@ -433,7 +445,7 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
-    def upload_media(self, media: str):
+    def upload_media(self, media: str) -> Union[Dict[Any, Any], None]:
         """
         Uploads a media to the cloud api and returns the id of the media
 
@@ -474,7 +486,7 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return None
 
-    def delete_media(self, media_id: str):
+    def delete_media(self, media_id: str) -> Union[Dict[Any, Any], None]:
         """
         Deletes a media from the cloud api
 
@@ -490,29 +502,47 @@ class WhatsApp(object):
         logging.info(f"Status code: {r.status_code}")
         logging.info(f"Response: {r.json()}")
         return None
-    
-    def mark_as_read(self, message_id: str):
+
+    def mark_as_read(self, message_id: str) -> Dict[Any, Any]:
         """
         Marks a message as read
-        
-        Args: 
+
+        Args:
             message_id[str]: Id of the message to be marked as read
+
+        Returns:
+            Dict[Any, Any]: Response from the API
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.mark_as_read("message_id")
         """
         headers = {
-            'Authorization': f'Bearer {self.token}',
-            'Content-Type': 'application/json',
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
         }
 
         json_data = {
-            'messaging_product': 'whatsapp',
-            'status': 'read',
-            'message_id': message_id,
+            "messaging_product": "whatsapp",
+            "status": "read",
+            "message_id": message_id,
         }
+        logging.info(f"Marking message {message_id} as read")
         response = requests.post(
-            f'{self.v15_base_url}/{self.phone_number_id}/messages', headers=headers, json=json_data).json()
-        return response["success"]
+            f"{self.v15_base_url}/{self.phone_number_id}/messages",
+            headers=headers,
+            json=json_data,
+        ).json()
+        if response.status_code == 200:
+            logging.info(f"Message {message_id} marked as read")
+            return response
+        logging.info(f"Error marking message {message_id} as read")
+        logging.info(f"Status code: {response.status_code}")
+        logging.info(f"Response: {response.json()}")
+        return response
 
-    def create_button(self, button):
+    def create_button(self, button: Dict[Any, Any]) -> Dict[Any, Any]:
         """
         Method to create a button object to be used in the send_message method.
 
@@ -530,7 +560,7 @@ class WhatsApp(object):
             data["footer"] = {"text": button.get("footer")}
         return data
 
-    def send_button(self, button, recipient_id):
+    def send_button(self, button: Dict[Any, Any], recipient_id: str) -> Dict[Any, Any]:
         """
         Sends an interactive buttons message to a WhatsApp user
 
@@ -556,7 +586,9 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def send_reply_button(self, button, recipient_id):
+    def send_reply_button(
+        self, button: Dict[Any, Any], recipient_id: str
+    ) -> Dict[Any, Any]:
         """
         Sends an interactive reply buttons[menu] message to a WhatsApp user
 
@@ -583,7 +615,7 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return r.json()
 
-    def query_media_url(self, media_id: str):
+    def query_media_url(self, media_id: str) -> Union[str, None]:
         """
         Query media url from media id obtained either by manually uploading media or received media
 
@@ -609,7 +641,9 @@ class WhatsApp(object):
         logging.info(f"Response: {r.json()}")
         return None
 
-    def download_media(self, media_url: str, mime_type: str, file_path: str = "temp"):
+    def download_media(
+        self, media_url: str, mime_type: str, file_path: str = "temp"
+    ) -> Union[str, None]:
         """
         Download media from media url obtained either by manually uploading media or received media
 
@@ -646,7 +680,7 @@ class WhatsApp(object):
             logging.info(f"Error downloading media to {save_file_here}")
             return None
 
-    def preprocess(self, data):
+    def preprocess(self, data: Dict[Any, Any]) -> Dict[Any, Any]:
         """
         Preprocesses the data received from the webhook.
 
@@ -657,7 +691,22 @@ class WhatsApp(object):
         """
         return data["entry"][0]["changes"][0]["value"]
 
-    def get_mobile(self, data)-> Union[str, None]:
+    def is_message(self, data: Dict[Any, Any]) -> bool:
+        """is_message checks if the data received from the webhook is a message.
+
+        Args:
+            data (Dict[Any, Any]): The data received from the webhook
+
+        Returns:
+            bool: True if the data is a message, False otherwise
+        """
+        data = self.preprocess(data)
+        if "messages" in data:
+            return True
+        else:
+            return False
+
+    def get_mobile(self, data: Dict[Any, Any]) -> Union[str, None]:
         """
         Extracts the mobile number of the sender from the data received from the webhook.
 
@@ -675,7 +724,7 @@ class WhatsApp(object):
         if "contacts" in data:
             return data["contacts"][0]["wa_id"]
 
-    def get_name(self, data)-> Union[str, None]:
+    def get_name(self, data: Dict[Any, Any]) -> Union[str, None]:
         """
         Extracts the name of the sender from the data received from the webhook.
 
@@ -692,7 +741,7 @@ class WhatsApp(object):
         if contact:
             return contact["contacts"][0]["profile"]["name"]
 
-    def get_message(self, data)-> Union[str, None]:
+    def get_message(self, data: Dict[Any, Any]) -> Union[str, None]:
         """
         Extracts the text message of the sender from the data received from the webhook.
 
@@ -709,7 +758,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["text"]["body"]
 
-    def get_message_id(self, data)-> Union[str, None]:
+    def get_message_id(self, data: Dict[Any, Any]) -> Union[str, None]:
         """
         Extracts the message id of the sender from the data received from the webhook.
 
@@ -726,7 +775,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["id"]
 
-    def get_message_timestamp(self, data)-> Union[str, None]:
+    def get_message_timestamp(self, data: Dict[Any, Any]) -> Union[str, None]:
         """ "
         Extracts the timestamp of the message from the data received from the webhook.
 
@@ -743,7 +792,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["timestamp"]
 
-    def get_interactive_response(self, data)-> Union[Dict, None]:
+    def get_interactive_response(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """
          Extracts the response of the interactive message from the data received from the webhook.
 
@@ -765,7 +814,7 @@ class WhatsApp(object):
             if "interactive" in data["messages"][0]:
                 return data["messages"][0]["interactive"]
 
-    def get_location(self, data)-> Union[Dict, None]:
+    def get_location(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """
         Extracts the location of the sender from the data received from the webhook.
 
@@ -785,7 +834,7 @@ class WhatsApp(object):
             if "location" in data["messages"][0]:
                 return data["messages"][0]["location"]
 
-    def get_image(self, data)-> Union[Dict, None]:
+    def get_image(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """ "
         Extracts the image of the sender from the data received from the webhook.
 
@@ -803,8 +852,8 @@ class WhatsApp(object):
         if "messages" in data:
             if "image" in data["messages"][0]:
                 return data["messages"][0]["image"]
-     
-    def get_document(self, data)-> Union[Dict, None]:
+
+    def get_document(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """ "
         Extracts the document of the sender from the data received from the webhook.
 
@@ -823,8 +872,7 @@ class WhatsApp(object):
             if "document" in data["messages"][0]:
                 return data["messages"][0]["document"]
 
-
-    def get_audio(self, data)-> Union[Dict, None]:
+    def get_audio(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """
         Extracts the audio of the sender from the data received from the webhook.
 
@@ -844,7 +892,7 @@ class WhatsApp(object):
             if "audio" in data["messages"][0]:
                 return data["messages"][0]["audio"]
 
-    def get_video(self, data)-> Union[Dict, None]:
+    def get_video(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """
         Extracts the video of the sender from the data received from the webhook.
 
@@ -864,7 +912,7 @@ class WhatsApp(object):
             if "video" in data["messages"][0]:
                 return data["messages"][0]["video"]
 
-    def get_message_type(self, data)-> Union[str, None]:
+    def get_message_type(self, data: Dict[Any, Any]) -> Union[str, None]:
         """
         Gets the type of the message sent by the sender from the data received from the webhook.
 
@@ -884,7 +932,7 @@ class WhatsApp(object):
         if "messages" in data:
             return data["messages"][0]["type"]
 
-    def get_delivery(self, data)-> Union[Dict, None]:
+    def get_delivery(self, data: Dict[Any, Any]) -> Union[Dict, None]:
         """
         Extracts the delivery status of the message from the data received from the webhook.
         Args:
@@ -897,7 +945,7 @@ class WhatsApp(object):
         if "statuses" in data:
             return data["statuses"][0]["status"]
 
-    def changed_field(self, data):
+    def changed_field(self, data: Dict[Any, Any]) -> str:
         """
         Helper function to check if the field changed in the data received from the webhook.
 
