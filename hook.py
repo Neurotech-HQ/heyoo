@@ -101,7 +101,7 @@ def hook():
                 print(f"Message : {delivery}")
             else:
                 print("No new message")
-    return "ok"
+    return "OK", 200
 
 
 if __name__ == "__main__":
