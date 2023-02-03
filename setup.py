@@ -22,7 +22,7 @@ setup(
     author_email="isaackeinstein@gmail.com",
     license="MIT",
     packages=["heyoo"],
-    install_requires=["requests==2.28.1", "Flask==2.2.2", "requests-toolbelt==0.9.1"],
+    install_requires=["requests>=2.28.1", "Flask>=2.2.2", "requests-toolbelt>=0.9.1"],
     tests_require=test_deps,
     extras_require=extras,
     keywords=[
