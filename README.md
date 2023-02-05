@@ -257,6 +257,8 @@ Here how to send a pre-approved template message, Template messages can either b
 
 You can customize the template message by passing a dictionary of components.
 
+    
+IMPORTANT: components are also known as variable parameters (like `{{0}}` or `{{1}}`) which are used to include variables into a message.
 You can find the available components in the documentation.
 <https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates>
 
