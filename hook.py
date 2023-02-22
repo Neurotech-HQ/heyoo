@@ -50,9 +50,9 @@ def hook():
 
             elif message_type == "interactive":
                 message_response = messenger.get_interactive_response(data)
-                intractive_type = message_response.get("type")
-                message_id = message_response[intractive_type]["id"]
-                message_text = message_response[intractive_type]["title"]
+                interactive_type = message_response.get("type")
+                message_id = message_response[interactive_type]["id"]
+                message_text = message_response[interactive_type]["title"]
                 logging.info(f"Interactive Message; {message_id}: {message_text}")
 
             elif message_type == "location":
