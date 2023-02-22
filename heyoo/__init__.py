@@ -805,9 +805,9 @@ class WhatsApp(object):
             >>> from whatsapp import WhatsApp
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> response = whatsapp.get_interactive_response(data)
-            >>> intractive_type = response.get("type")
-            >>> message_id = response[intractive_type]["id"]
-            >>> message_text = response[intractive_type]["title"]
+            >>> interactive_type = response.get("type")
+            >>> message_id = response[interactive_type]["id"]
+            >>> message_text = response[interactive_type]["title"]
         """
         data = self.preprocess(data)
         if "messages" in data:
