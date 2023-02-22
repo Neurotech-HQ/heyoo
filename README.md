@@ -82,6 +82,19 @@ Once you have authenticated your app, now you can start using the above mentione
 
 > Apparently it is only possible to send messages other than templates after the target phone responds to an initial message. Reference: <https://developers.facebook.com/community/threads/425605939396247/>
 
+## Logging
+
+You can configure your own log level. This is an example to set the log level to info. By default only Error messages are logged.
+
+```python
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+```
+
 ## Sending Messanges
 
 Use this method to send text message to a WhatsApp number.

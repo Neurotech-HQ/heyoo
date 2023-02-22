@@ -11,12 +11,7 @@ from typing import Optional, Dict, Any, List, Union, Tuple, Callable
 
 
 # Setup logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 class WhatsApp(object):
     """ "
@@ -76,7 +71,7 @@ class WhatsApp(object):
             return r.json()
         logging.info(f"Message not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
-        logging.info(f"Response: {r.json()}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def reply_to_message(
@@ -107,7 +102,7 @@ class WhatsApp(object):
             return r.json()
         logging.info(f"Message not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
-        logging.info(f"Response: {r.json()}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_template(
@@ -157,7 +152,7 @@ class WhatsApp(object):
             return r.json()
         logging.info(f"Template not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
-        logging.info(f"Response: {r.json()}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_templatev2(self, template, recipient_id, components, lang="en_US"):
@@ -178,7 +173,7 @@ class WhatsApp(object):
             return r.json()
         logging.info(f"Template not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
-        logging.info(f"Response: {r.json()}")
+        logging.error(f"Response: {r.json()}")
         return r.json()
 
     def send_location(self, lat, long, name, address, recipient_id):
