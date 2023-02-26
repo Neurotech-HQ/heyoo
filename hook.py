@@ -18,17 +18,18 @@ logging.basicConfig(
 )
 
 
-@app.route("/", methods=["GET", "POST"])
-def hook():
-    if request.method == "GET":
-        if request.args.get("hub.verify_token") == VERIFY_TOKEN:
-            logging.info("Verified webhook")
-            response = make_response(request.args.get("hub.challenge"), 200)
-            response.mimetype = "text/plain"
-            return response
-        logging.error("Webhook Verification failed")
-        return "Invalid verification token"
+@app.get("/")
+def verify_token():
+    if request.args.get("hub.verify_token") == VERIFY_TOKEN:
+        logging.info("Verified webhook")
+        response = make_response(request.args.get("hub.challenge"), 200)
+        response.mimetype = "text/plain"
+        return response
+    logging.error("Webhook Verification failed")
+    return "Invalid verification token"
 
+@app.post("/")
+def hook():
     # Handle Webhook Subscriptions
     data = request.get_json()
     logging.info("Received webhook data: %s", data)
@@ -66,7 +67,6 @@ def hook():
                 image_id, mime_type = image["id"], image["mime_type"]
                 image_url = messenger.query_media_url(image_id)
                 image_filename = messenger.download_media(image_url, mime_type)
-                print(f"{mobile} sent image {image_filename}")
                 logging.info(f"{mobile} sent image {image_filename}")
 
             elif message_type == "video":
@@ -74,7 +74,6 @@ def hook():
                 video_id, mime_type = video["id"], video["mime_type"]
                 video_url = messenger.query_media_url(video_id)
                 video_filename = messenger.download_media(video_url, mime_type)
-                print(f"{mobile} sent video {video_filename}")
                 logging.info(f"{mobile} sent video {video_filename}")
 
             elif message_type == "audio":
@@ -82,7 +81,6 @@ def hook():
                 audio_id, mime_type = audio["id"], audio["mime_type"]
                 audio_url = messenger.query_media_url(audio_id)
                 audio_filename = messenger.download_media(audio_url, mime_type)
-                print(f"{mobile} sent audio {audio_filename}")
                 logging.info(f"{mobile} sent audio {audio_filename}")
 
             elif message_type == "document":
@@ -90,17 +88,16 @@ def hook():
                 file_id, mime_type = file["id"], file["mime_type"]
                 file_url = messenger.query_media_url(file_id)
                 file_filename = messenger.download_media(file_url, mime_type)
-                print(f"{mobile} sent file {file_filename}")
                 logging.info(f"{mobile} sent file {file_filename}")
             else:
-                print(f"{mobile} sent {message_type} ")
-                print(data)
+                logging.info(f"{mobile} sent {message_type} ")
+                logging.info(data)
         else:
             delivery = messenger.get_delivery(data)
             if delivery:
-                print(f"Message : {delivery}")
+                logging.info(f"Message : {delivery}")
             else:
-                print("No new message")
+                logging.info("No new message")
     return "OK", 200
 
 
