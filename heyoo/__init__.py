@@ -266,8 +266,50 @@ class WhatsApp(object):
         logging.error(r.json())
         return r.json()
 
-    def send_sticker(self, sticker: str, recipient_id: str, linl=True):
-        pass
+    def send_sticker(self, sticker: str, recipient_id: str, recipient_type="individual", link=True):
+        """
+        Sends a sticker message to a WhatsApp user
+
+        There are two ways to send a sticker message to a user, either by passing the image id or by passing the sticker link.
+        Sticker id is the id of the sticker uploaded to the cloud api.
+
+        Args:
+            sticker[str]: Sticker id or link of the sticker
+            recipient_id[str]: Phone number of the user with country code wihout +
+            recipient_type[str]: Type of the recipient, either individual or group
+            link[bool]: Whether to send an sticker id or an sticker link, True means that the sticker is an id, False means that the image is a link
+
+
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.send_sticker("170511049062862", "5511999999999", link=False)
+        """
+        if link:
+            data = {
+                "messaging_product": "whatsapp",
+                "recipient_type": recipient_type,
+                "to": recipient_id,
+                "type": "sticker",
+                "sticker": {"link": sticker},
+            }
+        else:
+            data = {
+                "messaging_product": "whatsapp",
+                "recipient_type": recipient_type,
+                "to": recipient_id,
+                "type": "sticker",
+                "sticker": {"id": sticker},
+            }
+        logging.info(f"Sending sticker to {recipient_id}")
+        r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Sticker sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Sticker not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(r.json())
+        return r.json()
 
     def send_audio(self, audio, recipient_id, link=True):
         """
@@ -346,6 +388,39 @@ class WhatsApp(object):
             logging.info(f"Video sent to {recipient_id}")
             return r.json()
         logging.info(f"Video not sent to {recipient_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
+        return r.json()
+
+    def send_custom_json(self, data, recipient_id=None):
+        """
+        Sends a custom json to a WhatsApp user. This can be used to send custom objects to the message endpoint.
+
+        Args:
+            data[dict]: Dictionary that should be send
+            recipient_id[str]: Phone number of the user with country code wihout +
+        Example:
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.send_custom_json({
+                    "messaging_product": "whatsapp",
+                    "type": "audio",
+                    "audio": {"id": audio}}, "5511999999999")
+        """
+
+        if recipient_id:
+            if "to" in data.keys():
+                data_recipient_id = data["to"]
+                logging.info(f"Recipient Id is defined in data ({data_recipient_id}) and recipient_id parameter ({recipient_id})")
+            else:
+                data["to"] = recipient_id
+
+        logging.info(f"Sending custom json to {recipient_id}")
+        r = requests.post(self.url, headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Custom json sent to {recipient_id}")
+            return r.json()
+        logging.info(f"Custom json not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
         logging.error(f"Response: {r.json()}")
         return r.json()
@@ -671,8 +746,8 @@ class WhatsApp(object):
             logging.info(f"Media downloaded to {save_file_here}")
             return f.name
         except Exception as e:
-            print(e)
-            logging.info(f"Error downloading media to {save_file_here}")
+            logging.info(e)
+            logging.ERROR(f"Error downloading media to {save_file_here}")
             return None
 
     def preprocess(self, data: Dict[Any, Any]) -> Dict[Any, Any]:
