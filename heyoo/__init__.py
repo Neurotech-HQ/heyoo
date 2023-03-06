@@ -144,6 +144,10 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
+    def send_templatev2(self, template, recipient_id, components, lang: str = "en_US"):
+        return send_template(template, recipient_id, components, lang: str = "en_US")
+    
+    
     def send_location(self, lat, long, name, address, recipient_id):
         """
         Sends a location message to a WhatsApp user
