@@ -7,13 +7,13 @@
 [![Downloads](https://pepy.tech/badge/heyoo/month)](https://pepy.tech/project/heyoo)
 [![Downloads](https://pepy.tech/badge/heyoo/week)](https://pepy.tech/project/heyoo)
 
-Unofficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api)
+Unofficial Python wrapper for the [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api)
 
-## Features supported
+## Supported features
 
 1. Sending messages
 2. Marking messages as read
-3. Sending  Media (images, audio, video and documents)
+3. Sending Media (images, audio, video and documents)
 4. Sending location
 5. Sending interactive buttons
 6. Sending template messages
@@ -23,7 +23,7 @@ Unofficial python wrapper to [WhatsApp Cloud API](https://developers.facebook.co
 
 To get started with **heyoo**, you have to firstly install the libary either directly or using *pip*.
 
-### Installation directly
+### Building from source
 
 Use git to clone or you can also manually download the project repository just as shown below;
 
@@ -33,7 +33,7 @@ $ cd heyoo
 heyoo $ python setup.py install 
 ```
 
-### Installing from pip
+### Installing via pip
 
 ```bash
 # For Windows 
@@ -54,9 +54,9 @@ $ docker compose up
 
 ## Setting up
 
-To get started using this package, you will need **TOKEN** and **TEST WHATSAPP NUMBER** which you can get by from [Facebook Developer Portal](https://developers.facebook.com/)
+To get started using this package, you will need **TOKEN** and **TEST WHATSAPP NUMBER** (the library works either with a production phone number, if you have one) which you can get from the [Facebook Developer Portal](https://developers.facebook.com/)
 
-Here are steps to follow for you to get started
+Here are steps to follow for you to get started:
 
 1. [Go to your apps](https://developers.facebook.com/apps)
 2. [create an app](https://developers.facebook.com/apps/create/)
@@ -67,20 +67,20 @@ Here are steps to follow for you to get started
 6. Right there you will see a your **TOKEN** and **TEST WHATSAPP NUMBER** and its phone_number_id
 7. Lastly verify the number you will be using for testing on the **To** field.
 
-Once you're follow the above procedures, now you're ready to start hacking with the Wrapper.
+Once you've followed the above procedures you're ready to start hacking with the Wrapper.
 
 ## Authentication
 
-Here how you authenticate your application, you need to specify two things the ```TOKEN``` and ```phone_number_id``` of your test number
+To authenticate your application, you need to specify  the ```TOKEN``` and the ```phone_number_id``` of your application
 
 ```python
 >>> from heyoo import WhatsApp
 >>> messenger = WhatsApp('TOKEN',  phone_number_id='104xxxxxx')
 ```
 
-Once you have authenticated your app, now you can start using the above mentioned feature as shown above;
+Once you have authenticated your app you can start using the above mentioned feature as shown above;
 
-> Apparently it is only possible to send messages other than templates after the target phone responds to an initial message. Reference: <https://developers.facebook.com/community/threads/425605939396247/>
+> It is only possible to send messages other than templates only after the target phone responds to an initial template message or sends a message first. This resets every 24 hours; after that, you need to send a template again or the message won't be delivered. Reference: <https://developers.facebook.com/community/threads/425605939396247/>
 
 ## Logging
 
@@ -380,7 +380,7 @@ If you will face any issue with the usage of this package please raise one so as
 
 ## Contributing
 
-This is an opensource project under ```MIT License``` so any one is welcome to contribute from typo, to source code to documentation, ```JUST FORK IT```.
+This is an opensource project under ```MIT License``` so any one is welcome to contribute from typo to source code or documentation, ```JUST FORK IT```.
 
 ## References
 
