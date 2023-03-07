@@ -262,6 +262,8 @@ Here an example;
 
 ## Sending a Template Messages
 
+⚠️Warning! the `send_templatev2()` method is being deprecated.
+    
 Here how to send a pre-approved template message, Template messages can either be;
 
 1. Text template
@@ -276,8 +278,9 @@ You can find the available components in the documentation.
 <https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates>
 
 ```python
->>> messenger.send_template("hello_world", "255757xxxxxx", components=[])
+>>> messenger.send_template("hello_world", "255757xxxxxx", components=[], lang="en_US")
 ```
+`lang` is optional but required when sending templates in other languages.
 
 ## Webhook
 

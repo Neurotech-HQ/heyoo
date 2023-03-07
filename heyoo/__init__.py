@@ -6,6 +6,8 @@ import os
 import mimetypes
 import requests
 import logging
+import warnings
+from colorama import Fore, Style
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from typing import Optional, Dict, Any, List, Union, Tuple, Callable
 
@@ -105,14 +107,7 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
-    def send_template(
-        self,
-        template: str,
-        recipient_id: str,
-        recipient_type="individual",
-        lang: str = "en_US",
-        components: List = None,
-    ):
+    def send_template(self, template, recipient_id, components, lang: str = "en_US"):
         """
         Sends a template message to a WhatsApp user, Template messages can either be;
             1. Text template
@@ -131,31 +126,6 @@ class WhatsApp(object):
             >>> whatsapp = WhatsApp(token, phone_number_id)
             >>> whatsapp.send_template("hello_world", "5511999999999", lang="en_US"))
         """
-        if components is None:  # TO NOT USE LIST AS DEFAULT, BECAUSE IT IS MUTABLE
-            components = []
-        data = {
-            "messaging_product": "whatsapp",
-            "recipient_type": recipient_type,
-            "to": recipient_id,
-            "type": "template",
-            "template": {
-                "name": template,
-                "language": {"code": lang},
-                "components": components,
-            },
-        }
-        logging.info(f"Sending template to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
-
-        if r.status_code == 200:
-            logging.info(f"Template sent to {recipient_id}")
-            return r.json()
-        logging.info(f"Template not sent to {recipient_id}")
-        logging.info(f"Status code: {r.status_code}")
-        logging.error(f"Response: {r.json()}")
-        return r.json()
-
-    def send_templatev2(self, template, recipient_id, components, lang="en_US"):
         data = {
             "messaging_product": "whatsapp",
             "to": recipient_id,
@@ -176,6 +146,12 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
+    def send_templatev2(self, template, recipient_id, components, lang: str = "en_US"):
+        message = f"{Fore.RED}The 'send_templatev2' method is being deprecated and will be removed in the future. Please use the 'send_template' method instead.{Style.RESET_ALL}"
+        warnings.warn(message, DeprecationWarning)
+        return send_template(template, recipient_id, components, lang=lang)
+    
+    
     def send_location(self, lat, long, name, address, recipient_id):
         """
         Sends a location message to a WhatsApp user
