@@ -4,7 +4,7 @@ from setuptools import setup
 # read the contents of your description file
 
 this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, "description.md"), encoding="utf-8") as f:
+with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 test_deps = ["python-dotenv==0.20.0", "pytest==7.1.3"]
