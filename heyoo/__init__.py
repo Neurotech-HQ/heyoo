@@ -144,13 +144,7 @@ class WhatsApp(object):
         logging.info(f"Template not sent to {recipient_id}")
         logging.info(f"Status code: {r.status_code}")
         logging.error(f"Response: {r.json()}")
-        return r.json()
-
-    def send_templatev2(self, template, recipient_id, components, lang: str = "en_US"):
-        message = f"{Fore.RED}The 'send_templatev2' method is being deprecated and will be removed in the future. Please use the 'send_template' method instead.{Style.RESET_ALL}"
-        warnings.warn(message, DeprecationWarning)
-        return send_template(template, recipient_id, components, lang=lang)
-    
+        return r.json()    
     
     def send_location(self, lat, long, name, address, recipient_id):
         """
