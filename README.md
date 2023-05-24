@@ -261,9 +261,7 @@ Here an example;
 ```
 
 ## Sending a Template Messages
-
-⚠️Warning! the `send_templatev2()` method is being deprecated.
-    
+  
 Here how to send a pre-approved template message, Template messages can either be;
 
 1. Text template
