@@ -95,7 +95,41 @@ logging.basicConfig(
 )
 ```
 
-## Sending Messanges
+## App events
+
+The current supported events are:
+- on_message, called on every message received
+- on_verification, called once the app gets a verification request from Facebook
+- on_event, called every time a message arrives or a verification request is received. 
+
+All the event listeners **must** be asynchronous for any version > 2.9.3.
+
+To create an event listener app, you need to create a WhatsApp() instance and pass it a callback function. The callback function will be called every time an event occurs.
+
+```python
+from whatsapp import WhatsApp
+
+app = WhatsApp(token, phone_number_id, logger) # reference: Installation & setup
+
+@app.on_message
+async def on_message(message):
+    print(message)
+
+app.run(host, port, debug, **kwargs)
+```
+
+The on_message event is triggered on a new message in any chat. The Message object is passed as an argument to the callback function.
+
+The on_verification event is triggered when the webhook gets verified by WhatsApp. The Verification object is passed as an argument to the callback function. If the verification is not successful, the callback function will return False.
+
+The on_event event is triggered on any event. A single argument is passed, whose type depends on the event type (Message, str, bool, etc).
+
+
+### You can always use the WhatsApp object to send/parse messages. Listening to events is optional.
+
+    
+    
+## Sending Messages
 
 Use this method to send text message to a WhatsApp number.
 
