@@ -95,6 +95,9 @@ logging.basicConfig(
 )
 ```
 
+You can easily globally disable logging during the class initialization by passing the `logging=False`argument.
+
+    
 ## Sending Messanges
 
 Use this method to send text message to a WhatsApp number.
