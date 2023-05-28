@@ -10,7 +10,7 @@ import warnings
 from colorama import Fore, Style
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from typing import Optional, Dict, Any, List, Union, Tuple, Callable
-
+from flask import Flask, request, Response
 
 # Setup logging
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -33,11 +33,89 @@ class WhatsApp(object):
         self.base_url = "https://graph.facebook.com/v14.0"
         self.v15_base_url = "https://graph.facebook.com/v15.0"
         self.url = f"{self.base_url}/{phone_number_id}/messages"
-
+        async def base():
+            pass
+        self.message_handler = base
+        self.other_handler = base
+        self.verification_handler = base
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(self.token),
         }
+        self.app = Flask(__name__)
+
+        # Verification handler has 1 argument: challenge (str | bool): str if verification is successful, False if not
+
+        @self.app.get("/")
+        async def verify_token():
+            if request.args.get("hub.verify_token") == self.token:
+                logging.info("Verified webhook")
+                challenge = request.args.get("hub.challenge")
+                self.verification_handler(challenge)
+                self.other_handler(challenge)
+                return str(challenge)
+            logging.error("Webhook Verification failed")
+            await self.verification_handler(False)
+            await self.other_handler(False)
+            return "Invalid verification token"
+
+        @self.app.post("/")
+        async def hook():
+            # Handle Webhook Subscriptions
+            data = request.get_json()
+            if data is None:
+                return Response(status=200)
+            logging.info("Received webhook data: %s", data)
+            changed_field = self.instance.changed_field(data)
+            if changed_field == "messages":
+                new_message = self.instance.is_message(data)
+                if new_message:
+                    msg = Message(instance=self.instance, data=data)
+                    await self.message_handler(msg)
+                    await self.other_handler(msg)
+            return "OK", 200
+
+        def create_message(self, **kwargs) -> Message:
+            """
+            Create a message object
+
+            Args:
+                data[dict]: The message data
+                content[str]: The message content
+                to[str]: The recipient
+                rec_type[str]: The recipient type (individual/group)
+            """
+            return Message(**kwargs, instance=self)
+
+        def on_message(self, handler: function):
+            """
+            Set the handler for incoming messages
+
+            Args:
+                handler[function]: The handler function
+            """
+            self.message_handler = handler
+
+        def on_event(self, handler: function):
+            """
+            Set the handler for other events
+
+            Args:
+                handler[function]: The handler function
+            """
+            self.other_handler = handler
+
+        def on_verification(self, handler: function):
+            """
+            Set the handler for verification
+
+            Args:
+                handler[function]: The handler function
+            """
+            self.verification_handler = handler
+
+        def run(self, host: str = "localhost", port: int = 5000, debug: bool = False, **options):
+            self.app.run(host=host, port=port, debug=debug, **options)
 
     def send_message(
         self, message, recipient_id, recipient_type="individual", preview_url=True
