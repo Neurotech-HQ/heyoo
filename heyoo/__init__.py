@@ -574,7 +574,7 @@ class WhatsApp(object):
             headers=headers,
             json=json_data,
         ).json()
-        if response.status_code == 200:
+        if response.get("status_code") == 200:
             logging.info(f"Message {message_id} marked as read")
             return response
         logging.info(f"Error marking message {message_id} as read")
