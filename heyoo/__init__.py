@@ -573,10 +573,10 @@ class WhatsApp(object):
             f"{self.v15_base_url}/{self.phone_number_id}/messages",
             headers=headers,
             json=json_data,
-        ).json()
+        )
         if response.status_code == 200:
             logging.info(f"Message {message_id} marked as read")
-            return response
+            return response.json()
         logging.info(f"Error marking message {message_id} as read")
         logging.info(f"Status code: {response.status_code}")
         logging.info(f"Response: {response.json()}")
