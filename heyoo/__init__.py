@@ -76,6 +76,42 @@ class WhatsApp(object):
         logging.error(f"Response: {r.json()}")
         return r.json()
 
+    def send_reaction(
+        self, emoji, message_id, recipient_id, recipient_type="individual"
+    ):
+        """
+         Sends a reaction message to a WhatsApp user's message
+
+         Args:
+                emoji[str]: Emoji to become a reaction to a message. Ex.: '\uD83D\uDE00' (😀)
+                message_id[str]: Message id for a reaction to be attached to
+                recipient_id[str]: Phone number of the user with country code without +
+                recipient_type[str]: Type of the recipient, either individual or group
+
+        Example:
+            ```python
+            >>> from whatsapp import WhatsApp
+            >>> whatsapp = WhatsApp(token, phone_number_id)
+            >>> whatsapp.send_reaction("\uD83D\uDE00", "wamid.HBgLM...", "5511999999999")
+
+        """
+        data = {
+            "messaging_product": "whatsapp",
+            "recipient_type": recipient_type,
+            "to": recipient_id,
+            "type": "reaction",
+            "reaction": {"message_id": message_id, "emoji": emoji},
+        }
+        logging.info(f"Sending reaction to number {recipient_id} message id {message_id}")
+        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        if r.status_code == 200:
+            logging.info(f"Reaction sent to number {recipient_id} message id {message_id}")
+            return r.json()
+        logging.info(f"Message not sent  to number {recipient_id} message id {message_id}")
+        logging.info(f"Status code: {r.status_code}")
+        logging.error(f"Response: {r.json()}")
+        return r.json()
+
     def reply_to_message(
         self, message_id: str, recipient_id: str, message: str, preview_url: bool = True
     ):
