@@ -740,7 +740,7 @@ class WhatsApp(object):
         """
         r = requests.get(media_url, headers=self.headers)
         content = r.content
-        extension = mime_type.split("/")[1]
+        extension = mime_type.split("/")[1].split(";")[0].strip()
         # create a temporary file
         try:
 
