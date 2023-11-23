@@ -21,7 +21,7 @@ Unofficial Python wrapper for the [WhatsApp Cloud API](https://developers.facebo
 
 ## Getting started
 
-To get started with **heyoo**, you have to firstly install the libary either directly or using *pip*.
+To get started with **heyoo**, you have to firstly install the library either directly or using *pip*.
 
 ### Building from source
 
