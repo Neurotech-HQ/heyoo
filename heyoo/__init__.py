@@ -432,7 +432,7 @@ class WhatsApp(object):
         return r.json()
 
     def send_document(
-        self, document, recipient_id, caption=None, link=True
+        self, document, recipient_id, caption=None, link=True, filename=None
     ) -> Dict[Any, Any]:
         """ "
         Sends a document message to a WhatsApp user
@@ -443,6 +443,7 @@ class WhatsApp(object):
             recipient_id[str]: Phone number of the user with country code wihout +
             caption[str]: Caption of the document
             link[bool]: Whether to send a document id or a document link, True means that the document is an id, False means that the document is a link
+            filename[str]: Name of the file
 
         Example:
             >>> from whatsapp import WhatsApp
@@ -454,7 +455,7 @@ class WhatsApp(object):
                 "messaging_product": "whatsapp",
                 "to": recipient_id,
                 "type": "document",
-                "document": {"link": document, "caption": caption},
+                "document": {"link": document, "caption": caption, "filename": filename},
             }
         else:
             data = {
