@@ -3,6 +3,7 @@ from os import getenv
 from heyoo import WhatsApp
 from dotenv import load_dotenv
 
+
 async def main():
     load_dotenv()
     messenger = WhatsApp(token=getenv("TOKEN"), phone_number_id=getenv("PHONE_NUMBER_ID"))
@@ -13,6 +14,7 @@ async def main():
     )
 
     print(response)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
