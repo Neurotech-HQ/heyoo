@@ -1,12 +1,14 @@
+import asyncio
 from os import getenv
 from heyoo import WhatsApp
 from dotenv import load_dotenv
 
-if __name__ == "__main__":
-    load_dotenv()
-    messenger = WhatsApp(token=getenv("TOKEN"),phone_number_id=getenv("PHONE_NUMBER_ID"))
 
-    response = messenger.send_button(
+async def main():
+    load_dotenv()
+    messenger = WhatsApp(token=getenv("TOKEN"), phone_number_id=getenv("PHONE_NUMBER_ID"))
+
+    response = await messenger.send_button(
         recipient_id="255757xxxxxx",
         button={
             "header": "Header Testing",
@@ -30,3 +32,9 @@ if __name__ == "__main__":
             },
         },
     )
+
+    print(response)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
