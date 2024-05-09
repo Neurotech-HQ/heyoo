@@ -19,7 +19,7 @@ logging.basicConfig(
 
 
 @app.get("/")
-def verify_token():
+async def verify_token():
     if request.args.get("hub.verify_token") == VERIFY_TOKEN:
         logging.info("Verified webhook")
         response = make_response(request.args.get("hub.challenge"), 200)
@@ -28,8 +28,9 @@ def verify_token():
     logging.error("Webhook Verification failed")
     return "Invalid verification token"
 
+
 @app.post("/")
-def hook():
+async def hook():
     # Handle Webhook Subscriptions
     data = request.get_json()
     logging.info("Received webhook data: %s", data)
@@ -47,7 +48,7 @@ def hook():
                 message = messenger.get_message(data)
                 name = messenger.get_name(data)
                 logging.info("Message: %s", message)
-                messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
+                await messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
 
             elif message_type == "interactive":
                 message_response = messenger.get_interactive_response(data)
@@ -65,29 +66,29 @@ def hook():
             elif message_type == "image":
                 image = messenger.get_image(data)
                 image_id, mime_type = image["id"], image["mime_type"]
-                image_url = messenger.query_media_url(image_id)
-                image_filename = messenger.download_media(image_url, mime_type)
+                image_url = await messenger.query_media_url(image_id)
+                image_filename = await messenger.download_media(image_url, mime_type)
                 logging.info(f"{mobile} sent image {image_filename}")
 
             elif message_type == "video":
                 video = messenger.get_video(data)
                 video_id, mime_type = video["id"], video["mime_type"]
-                video_url = messenger.query_media_url(video_id)
-                video_filename = messenger.download_media(video_url, mime_type)
+                video_url = await messenger.query_media_url(video_id)
+                video_filename = await messenger.download_media(video_url, mime_type)
                 logging.info(f"{mobile} sent video {video_filename}")
 
             elif message_type == "audio":
                 audio = messenger.get_audio(data)
                 audio_id, mime_type = audio["id"], audio["mime_type"]
-                audio_url = messenger.query_media_url(audio_id)
-                audio_filename = messenger.download_media(audio_url, mime_type)
+                audio_url = await messenger.query_media_url(audio_id)
+                audio_filename = await messenger.download_media(audio_url, mime_type)
                 logging.info(f"{mobile} sent audio {audio_filename}")
 
             elif message_type == "document":
                 file = messenger.get_document(data)
                 file_id, mime_type = file["id"], file["mime_type"]
-                file_url = messenger.query_media_url(file_id)
-                file_filename = messenger.download_media(file_url, mime_type)
+                file_url = await messenger.query_media_url(file_id)
+                file_filename = await messenger.download_media(file_url, mime_type)
                 logging.info(f"{mobile} sent file {file_filename}")
             else:
                 logging.info(f"{mobile} sent {message_type} ")
