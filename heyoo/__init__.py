@@ -6,7 +6,6 @@ import os
 import mimetypes
 
 import httpx
-import requests
 import logging
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from typing import Dict, Any, List, Union

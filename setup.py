@@ -22,7 +22,7 @@ setup(
     author_email="isaackeinstein@gmail.com",
     license="MIT",
     packages=["heyoo"],
-    install_requires=["requests>=2.31.0", "requests-toolbelt>=0.9.1", "colorama", "typing;python_version<'3.5'"],
+    install_requires=["httpx>=0.27.0", "requests-toolbelt>=0.9.1", "colorama", "typing;python_version<'3.5'"],
     tests_require=test_deps,
     extras_require=extras,
     keywords=[
