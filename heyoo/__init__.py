@@ -10,6 +10,7 @@ import warnings
 from colorama import Fore, Style
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from typing import Optional, Dict, Any, List, Union, Tuple, Callable
+from requests.adapters import HTTPAdapter, Retry
 
 
 # Setup logging
@@ -39,6 +40,14 @@ class WhatsApp(object):
             "Authorization": "Bearer {}".format(self.token),
         }
 
+    def _get_session_with_retries(self):
+        session = requests.Session()
+        retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+        adapter = HTTPAdapter(max_retries=retries)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
+        return session
+
     def send_message(
         self, message, recipient_id, recipient_type="individual", preview_url=True
     ):
@@ -67,7 +76,8 @@ class WhatsApp(object):
             "text": {"preview_url": preview_url, "body": message},
         }
         logging.info(f"Sending message to {recipient_id}")
-        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(f"{self.url}", headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Message sent to {recipient_id}")
             return r.json()
@@ -103,7 +113,8 @@ class WhatsApp(object):
             "reaction": {"message_id": message_id, "emoji": emoji},
         }
         logging.info(f"Sending reaction to number {recipient_id} message id {message_id}")
-        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(f"{self.url}", headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Reaction sent to number {recipient_id} message id {message_id}")
             return r.json()
@@ -134,7 +145,8 @@ class WhatsApp(object):
         }
 
         logging.info(f"Replying to {message_id}")
-        r = requests.post(f"{self.url}", headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(f"{self.url}", headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Message sent to {recipient_id}")
             return r.json()
@@ -173,7 +185,8 @@ class WhatsApp(object):
             },
         }
         logging.info(f"Sending template to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Template sent to {recipient_id}")
             return r.json()
@@ -210,7 +223,8 @@ class WhatsApp(object):
             },
         }
         logging.info(f"Sending location to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Location sent to {recipient_id}")
             return r.json()
@@ -263,7 +277,8 @@ class WhatsApp(object):
                 "image": {"id": image, "caption": caption},
             }
         logging.info(f"Sending image to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Image sent to {recipient_id}")
             return r.json()
@@ -308,7 +323,8 @@ class WhatsApp(object):
                 "sticker": {"id": sticker},
             }
         logging.info(f"Sending sticker to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Sticker sent to {recipient_id}")
             return r.json()
@@ -347,7 +363,8 @@ class WhatsApp(object):
                 "audio": {"id": audio},
             }
         logging.info(f"Sending audio to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Audio sent to {recipient_id}")
             return r.json()
@@ -389,7 +406,8 @@ class WhatsApp(object):
                 "video": {"id": video, "caption": caption},
             }
         logging.info(f"Sending video to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Video sent to {recipient_id}")
             return r.json()
@@ -422,7 +440,8 @@ class WhatsApp(object):
                 data["to"] = recipient_id
 
         logging.info(f"Sending custom json to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Custom json sent to {recipient_id}")
             return r.json()
@@ -466,7 +485,8 @@ class WhatsApp(object):
             }
 
         logging.info(f"Sending document to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Document sent to {recipient_id}")
             return r.json()
@@ -513,7 +533,8 @@ class WhatsApp(object):
             "contacts": contacts,
         }
         logging.info(f"Sending contacts to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Contacts sent to {recipient_id}")
             return r.json()
@@ -550,7 +571,8 @@ class WhatsApp(object):
         headers["Content-Type"] = form_data.content_type
         logging.info(f"Content-Type: {form_data.content_type}")
         logging.info(f"Uploading media {media}")
-        r = requests.post(
+        session = self._get_session_with_retries()
+        r = session.post(
             f"{self.base_url}/{self.phone_number_id}/media",
             headers=headers,
             data=form_data,
@@ -571,7 +593,8 @@ class WhatsApp(object):
             media_id[str]: Id of the media to be deleted
         """
         logging.info(f"Deleting media {media_id}")
-        r = requests.delete(f"{self.base_url}/{media_id}", headers=self.headers)
+        session = self._get_session_with_retries()
+        r = session.delete(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
             logging.info(f"Media {media_id} deleted")
             return r.json()
@@ -606,7 +629,8 @@ class WhatsApp(object):
             "message_id": message_id,
         }
         logging.info(f"Marking message {message_id} as read")
-        response = requests.post(
+        session = self._get_session_with_retries()
+        response = session.post(
             f"{self.v15_base_url}/{self.phone_number_id}/messages",
             headers=headers,
             json=json_data,
@@ -654,7 +678,8 @@ class WhatsApp(object):
             "interactive": self.create_button(button),
         }
         logging.info(f"Sending buttons to {recipient_id}")
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Buttons sent to {recipient_id}")
             return r.json()
@@ -683,7 +708,8 @@ class WhatsApp(object):
             "type": "interactive",
             "interactive": button,
         }
-        r = requests.post(self.url, headers=self.headers, json=data)
+        session = self._get_session_with_retries()
+        r = session.post(self.url, headers=self.headers, json=data)
         if r.status_code == 200:
             logging.info(f"Reply buttons sent to {recipient_id}")
             return r.json()
@@ -709,7 +735,8 @@ class WhatsApp(object):
         """
 
         logging.info(f"Querying media url for {media_id}")
-        r = requests.get(f"{self.base_url}/{media_id}", headers=self.headers)
+        session = self._get_session_with_retries()
+        r = session.get(f"{self.base_url}/{media_id}", headers=self.headers)
         if r.status_code == 200:
             logging.info(f"Media url queried for {media_id}")
             return r.json()["url"]
@@ -739,7 +766,8 @@ class WhatsApp(object):
             >>> whatsapp.download_media("media_url", "image/jpeg")
             >>> whatsapp.download_media("media_url", "video/mp4", "path/to/file") #do not include the file extension
         """
-        r = requests.get(media_url, headers=self.headers)
+        session = self._get_session_with_retries()
+        r = session.get(media_url, headers=self.headers)
         content = r.content
         extension = mime_type.split("/")[1].split(";")[0].strip()
         # create a temporary file
