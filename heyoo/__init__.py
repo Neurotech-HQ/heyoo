@@ -30,8 +30,8 @@ class WhatsApp(object):
         """
         self.token = token
         self.phone_number_id = phone_number_id
-        self.base_url = "https://graph.facebook.com/v14.0"
-        self.v15_base_url = "https://graph.facebook.com/v15.0"
+        self.base_url = "https://graph.facebook.com/v21.0"
+        self.v15_base_url = "https://graph.facebook.com/v21.0"
         self.url = f"{self.base_url}/{phone_number_id}/messages"
 
         self.headers = {
