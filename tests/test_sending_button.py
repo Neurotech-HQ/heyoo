@@ -1,12 +1,15 @@
 from os import getenv
 from heyoo import WhatsApp
 from dotenv import load_dotenv
+import pytest
 
-def test_sending_button():
+
+@pytest.mark.asyncio
+async def test_sending_button():
     load_dotenv()
-    messenger = WhatsApp(token=getenv("TOKEN"),phone_number_id=getenv("PHONE_NUMBER_ID"))
+    messenger = WhatsApp(token=getenv("TOKEN"), phone_number_id=getenv("PHONE_NUMBER_ID"))
 
-    response = messenger.send_button(
+    response = await messenger.send_button(
         recipient_id=getenv("RECIPIENT_ID"),
         button={
             "header": "Header Testing",
@@ -31,6 +34,6 @@ def test_sending_button():
         },
     )
 
-    assert(response["contacts"][0]["input"]==getenv("RECIPIENT_ID"))
-    assert(response["contacts"][0]["wa_id"]==getenv("RECIPIENT_ID"))
-    assert(response["messaging_product"]=="whatsapp")
+    assert (response["contacts"][0]["input"] == getenv("RECIPIENT_ID"))
+    assert (response["contacts"][0]["wa_id"] == getenv("RECIPIENT_ID"))
+    assert (response["messaging_product"] == "whatsapp")

@@ -100,7 +100,7 @@ logging.basicConfig(
 Use this method to send text message to a WhatsApp number.
 
 ```python
->>> messenger.send_message('Your message ', 'Mobile eg: 255757xxxxx')
+>>> await messenger.send_message('Your message ', 'Mobile eg: 255757xxxxx')
 ```
 
 ## Marking messages as read
@@ -108,7 +108,7 @@ Use this method to send text message to a WhatsApp number.
 Use this method to mark a previously sent text message as read.
 
 ```python
->>> messenger.mark_as_read('Message ID')
+>>> await messenger.mark_as_read('Message ID')
 ```
     
 ## Sending Images
@@ -120,7 +120,7 @@ By default all media methods assume you're sending link containing media but you
 Here an example;
 
 ```python
->>> messenger.send_image(
+>>> await messenger.send_image(
         image="https://i.imgur.com/Fh7XVYY.jpeg",
         recipient_id="255757xxxxxx",
     )
@@ -131,10 +131,10 @@ Here an example;
 Here an example;
 
 ```python
->>> media_id = messenger.upload_media(
+>>> media_id = await messenger.upload_media(
         media='path/to/media',
     )['id']
->>> messenger.send_image(
+>>> await messenger.send_image(
         image=media_id,
         recipient_id="255757xxxxxx",
         link=False
@@ -149,7 +149,7 @@ Here an example;
 
 ```python
 
->>> messenger.send_video(
+>>> await messenger.send_video(
         video="https://www.youtube.com/watch?v=K4TOrB7at0Y",
         recipient_id="255757xxxxxx",
     )
@@ -160,7 +160,7 @@ Here an example;
 Here an example;
 
 ```python
->>> messenger.send_audio(
+>>> await messenger.send_audio(
         audio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         recipient_id="255757xxxxxx",
     )
@@ -171,7 +171,7 @@ Here an example;
 Here an example;
 
 ```python
->>> messenger.send_document(
+>>> await messenger.send_document(
         document="http://www.africau.edu/images/default/sample.pdf",
         recipient_id="255757xxxxxx",
     )
@@ -182,7 +182,7 @@ Here an example;
 Here an example;
 
 ```python
->>> messenger.send_location(
+>>> await messenger.send_location(
         lat=1.29,
         long=103.85,
         name="Singapore",
@@ -198,7 +198,7 @@ Here an example;
 > Note: row button title may not exceed 20 characters otherwise your message will not be sent to the target phone.
 
 ```python
->>> messenger.send_button(
+>>> await messenger.send_button(
         recipient_id="255757xxxxxx",
         button={
             "header": "Header Testing",
@@ -231,7 +231,7 @@ Here an example;
 > Send reply button only displays three reply buttons, if it exceeds three reply buttons, it will raise an error and your message will not be sent.
 
 ```python
->>> messenger.send_reply_button(
+>>> await messenger.send_reply_button(
         recipient_id="255757xxxxxx",
         button={
             "type": "button",
@@ -276,7 +276,7 @@ You can find the available components in the documentation.
 <https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates>
 
 ```python
->>> messenger.send_template("hello_world", "255757xxxxxx", components=[], lang="en_US")
+>>> await messenger.send_template("hello_world", "255757xxxxxx", components=[], lang="en_US")
 ```
 `lang` is optional but required when sending templates in other languages.
 
@@ -304,7 +304,7 @@ Here an example on how you can use webhook to respond to incoming messages;
                 message = messenger.get_message(data)
                 name = messenger.get_name(data)
                 logging.info("Message: %s", message)
-                messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
+                await messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
 
             elif message_type == "interactive":
                 message_response = messenger.get_interactive_response(data)
@@ -322,32 +322,32 @@ Here an example on how you can use webhook to respond to incoming messages;
             elif message_type == "image":
                 image = messenger.get_image(data)
                 image_id, mime_type = image["id"], image["mime_type"]
-                image_url = messenger.query_media_url(image_id)
-                image_filename = messenger.download_media(image_url, mime_type)
+                image_url = await messenger.query_media_url(image_id)
+                image_filename = await messenger.download_media(image_url, mime_type)
                 print(f"{mobile} sent image {image_filename}")
                 logging.info(f"{mobile} sent image {image_filename}")
 
             elif message_type == "video":
                 video = messenger.get_video(data)
                 video_id, mime_type = video["id"], video["mime_type"]
-                video_url = messenger.query_media_url(video_id)
-                video_filename = messenger.download_media(video_url, mime_type)
+                video_url = await messenger.query_media_url(video_id)
+                video_filename = await messenger.download_media(video_url, mime_type)
                 print(f"{mobile} sent video {video_filename}")
                 logging.info(f"{mobile} sent video {video_filename}")
 
             elif message_type == "audio":
                 audio = messenger.get_audio(data)
                 audio_id, mime_type = audio["id"], audio["mime_type"]
-                audio_url = messenger.query_media_url(audio_id)
-                audio_filename = messenger.download_media(audio_url, mime_type)
+                audio_url = await messenger.query_media_url(audio_id)
+                audio_filename = await messenger.download_media(audio_url, mime_type)
                 print(f"{mobile} sent audio {audio_filename}")
                 logging.info(f"{mobile} sent audio {audio_filename}")
 
             elif message_type == "document":
                 file = messenger.get_document(data)
                 file_id, mime_type = file["id"], file["mime_type"]
-                file_url = messenger.query_media_url(file_id)
-                file_filename = messenger.download_media(file_url, mime_type)
+                file_url = await messenger.query_media_url(file_id)
+                file_filename = await messenger.download_media(file_url, mime_type)
                 print(f"{mobile} sent file {file_filename}")
                 logging.info(f"{mobile} sent file {file_filename}")
             else:
